@@ -1,0 +1,28 @@
+---
+title: "News and updates surrounding plotly for R"
+venue: "The internet"
+type: "webinar"
+recording: "none"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+date: "April 12th, 2017"
+author: "Carson Sievert"
+---
+
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  fig.width = 10,
+  fig.height = 4,
+  comment = "#>",
+  collapse = TRUE
+)
+```
+
+
+## Profound things
