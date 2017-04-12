@@ -360,6 +360,8 @@ class: center, middle
 
 # Thanks!
 
+**Summary**: easily animation/link multiple views with **plotly**. For details, see [here](https://cpsievert.github.io/plotly_book/linking-views-without-shiny.html) and [here](https://cpsievert.github.io/plotly_book/key-frame-animations.html).
+
 Hope to see you at my 2-day [workshop](https://plotcon.plot.ly/workshops) in Oakland (May 4-5th)!
 
 <p></p>
