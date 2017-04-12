@@ -6,23 +6,315 @@ recording: "none"
 output:
   xaringan::moon_reader:
     lib_dir: libs
+    self_contained: false
     nature:
+    # approx the golden ratio
+      ratio: '14.6:9'
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
-date: "April 12th, 2017"
+date: "April 12th, 2017 <br /> <br /> Slides: https://cpsievert.github.io/plotcon17/webinar  <br /> <br /> Slides released under <a href='https://github.com/cpsievert/talks/blob/gh-pages/LICENSE'>Creative Commons</a>"
 author: "Carson Sievert"
 ---
 
 ```{r setup, echo = FALSE}
 knitr::opts_chunk$set(
   message = FALSE,
-  fig.width = 10,
-  fig.height = 4,
+  fig.width = 12.5,
+  fig.height = 5,
   comment = "#>",
-  collapse = TRUE
+  collapse = TRUE,
+  warning = FALSE
 )
 ```
 
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
 
-## Profound things
+# plotly 4.6.0
+
+* New features:
+    * [Animations](https://cpsievert.github.io/plotly_book/key-frame-animations.html)
+    * A [linked views paradigm](https://cpsievert.github.io/plotly_book/linking-views-without-shiny.html) (built on top of __crosstalk__)
+    * [Linked animations](https://cpsievert.github.io/plotly_book/linking-animated-views.html)
+    * Support for 8 more ggplot2 geoms
+
+* Documentation:
+    * The [NEWS.md](https://github.com/ropensci/plotly/blob/master/NEWS.md) file
+    * Package documentation (e.g., `help(animation)` & `help(highlight)`) 
+    * Package demos (e.g, `demo(package = "plotly")`)
+    * The [plotly for R book](https://cpsievert.github.io/plotly_book/)
+    * Blog post coming soon
+    
+* Workshops & training
+    * My upcoming 2-day [workshop at plotcon](https://plotcon.plot.ly/workshops)
+    * My upcoming [O'Reilly Oriole](http://www.oreilly.com/oriole/): _Interactive data visualization on the web with R_
+    * [Book me](mailto:cpsievert1@gmail.com) for personalized training
+    
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+
+## Official release coming soon
+
+* Until then, install dev version with:
+
+```r
+if (!require(devtools)) install.packages("devtools")
+devtools::install_github("ropensci/plotly")
+```
+
+* Additionally, install dependencies for today's examples:
+
+```r
+devtools::install_github("cpsievert/plotcon17@webinar")
+```
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+
+## Monthly housing sales
+
+```{r}
+library(plotly)
+txhousing
+```
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+
+## Abilene monthly sales, animated by year
+
+```{r}
+Abilene <- subset(txhousing, city == "Abilene")
+p <- ggplot(Abilene, aes(month, sales, frame = year)) + 
+  geom_line()
+ggplotly(p)
+```
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+
+## Works in `plot_ly()` as well
+
+```{r}
+p <- plot_ly(Abilene, x = ~month, y = ~sales, frame = ~year, showlegend = F)
+add_lines(p)
+```
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+
+
+## Animations are layer specific
+
+```{r}
+p <- ggplot(Abilene, aes(month, sales)) + 
+  geom_line(aes(group = year), alpha = 0.2) +
+  geom_line(aes(frame = year), color = "red")
+ggplotly(p)
+```
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+
+## Easily change animation options
+
+```{r}
+animation_opts(
+  ggplotly(p), frame = 1000, easing = "elastic"
+)
+```
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+
+## Highlighting via crosstalk
+
+```{r}
+library(crosstalk)
+d <- SharedData$new(Abilene, ~year)
+p <- ggplot(d, aes(month, sales)) +
+  geom_line(aes(group = year))
+gg <- ggplotly(p)
+highlight(gg, on = "plotly_click", off = "plotly_doubleclick")
+```
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+
+## Highlighting in small multiples
+
+```{r}
+d <- subset(txhousing, city %in% c("Galveston", "Midland", "Odessa", "South Padre Island"))
+sd <- SharedData$new(d, ~year)
+p <- ggplot(sd, aes(month, median, group = year)) + geom_line() +
+  facet_wrap(~city, ncol = 2)
+gg <- ggplotly(p, tooltip = "year")
+highlight(gg, on = "plotly_click")
+```
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+
+## Making comparisons with dynamic brush
+
+```{r, eval = FALSE}
+highlight(
+  gg, on = "plotly_click", dynamic = TRUE, persistent = TRUE, selectize = TRUE
+)
+```
+
+<!--
+for some reason, that won't print without creating the SharedData instance again ^^^
+also, how do we prevent redundant control panel?
+-->
+
+<iframe src="selectize.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+
+## Customize the appearance of selections
+
+```{r, eval = FALSE}
+highlight(
+  gg, on = "plotly_click", dynamic = TRUE, persistent = TRUE, 
+  selected = attrs_selected(mode = "markers+lines", marker = list(symbol = "x"))
+)
+```
+
+<!--
+same
+-->
+
+<iframe src="selected.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+
+## Brush events only work with markers
+
+The default "on" event is "brush", but that requires markers.
+
+```{r, eval = FALSE}
+# Use `style()` to modify attributes (i.e., add markers to the mode)
+style(gg, mode = "markers+lines", traces = 1:4)
+```
+
+<iframe src="brush.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+
+## Animating selections
+
+See [here](https://cpsievert.github.io/plotly_book/linking-animated-views.html) for more interesting examples.
+
+```{r}
+a <- SharedData$new(Abilene, ~month)
+p <- ggplot(a, aes(month, sales, frame = year)) + 
+  geom_line() + geom_point()
+layout(ggplotly(p), dragmode = "select")
+```
+
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+
+## Talk to other crosstalk-enabled widgets
+
+```{r, eval = FALSE}
+library(leaflet)
+sd <- SharedData$new(quakes)
+p <- plot_ly(sd, x = ~depth, y = ~mag) %>% add_markers(alpha = 0.5)
+map <- leaflet(sd) %>% addTiles() %>% addCircles()
+bscols(p, map)
+```
+
+<!-- 
+leaflet overrides css? :(
+-->
+
+<iframe src="leaflet/index.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+
+---
+class: center, middle, inverse
+
+## Expectations vs reality
+
+.pull-left[
+  <img src="thin-ice.gif" height = "500" width = "350" />
+]
+
+.pull-right[
+<br />
+<br />
+<br />
+<br />
+
+  **plotly** has a fairly general [linked-views paradigm](https://cpsievert.github.io/plotly_book/linking-views-without-shiny.html)
+
+  Other [**crosstalk**-enabled htmlwidgets](https://rstudio.github.io/crosstalk/) may or may not support these additional semantics
+  
+  The goal is to produce standalone HTML, but you can always [link views with shiny](https://cpsievert.github.io/plotly_book/linking-views-with-shiny.html)
+]
+
+---
+class: center, middle, inverse
+
+<img src="help.gif" />
+
+[Post an issue](https://github.com/ropensci/plotly/issues/new) on GitHub
+
+[Sponsor](https://plot.ly/products/consulting-and-oem/) plotly or plotly.js features
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+class: center, middle
+
+# Thanks!
+
+Hope to see you at my 2-day [workshop](https://plotcon.plot.ly/workshops) in Oakland (May 4-5th)!
+
+<p></p>
+
+Twitter: [@cpsievert](https://twitter.com/cpsievert) <br />
+GitHub: [@cpsievert](https://github.com/cpsievert) <br />
+Email: <cpsievert1@gmail.com> <br />
+Web: <http://cpsievert.github.io/>
+
+

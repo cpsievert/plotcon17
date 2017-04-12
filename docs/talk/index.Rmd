@@ -1,0 +1,37 @@
+---
+title: "Linked views on the web via R"
+venue: "plotcon 17"
+type: "invited"
+recording: "TBD"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      # approx the golden ratio
+      ratio: '14.6:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+date: "April 12th, 2017 <br /> <br /> Slides: https://cpsievert.github.io/plotcon17/talk  <br /> <br /> Slides released under <a href='https://github.com/cpsievert/talks/blob/gh-pages/LICENSE'>Creative Commons</a>"
+author: "Carson Sievert"
+---
+
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  fig.width = 10,
+  fig.height = 4,
+  comment = "#>",
+  collapse = TRUE
+)
+```
+
+## Why R?
+
+* Workflow
+  * Exploratory versus expository
+
+## Why linked views?
+
+* Scientific visualization versus data visualization
+  * e.g., 3D objects versus a tour
