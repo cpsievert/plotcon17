@@ -13,7 +13,7 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
-date: "April 12th, 2017 <br /> <br /> Slides: https://cpsievert.github.io/plotcon17/webinar  <br /> <br /> Slides released under <a href='https://github.com/cpsievert/talks/blob/gh-pages/LICENSE'>Creative Commons</a>"
+date: "April 12th, 2017 <br /> <br /> Slides: http://bit.ly/plotcon17-webinar  <br /> <br /> Slides released under <a href='https://github.com/cpsievert/talks/blob/gh-pages/LICENSE'>Creative Commons</a>"
 author: "Carson Sievert"
 ---
 
@@ -74,6 +74,12 @@ install.packages("crosstalk")
 install.packages("leaflet")
 ```
 
+* I also recommend using dev version of ggplot2:
+
+```r
+devtools::install_github("hadley/ggplot2")
+```
+
 ---
 background-image: url(plotly.svg)
 background-size: 100px
@@ -86,6 +92,21 @@ library(plotly)
 txhousing
 ```
 
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+
+## Abilene monthly sales
+
+```{r}
+Abilene <- subset(txhousing, city == "Abilene")
+p <- ggplot(Abilene, aes(month, sales, group = year)) + 
+  geom_line()
+ggplotly(p, dynamicTicks = TRUE)
+```
+
 ---
 background-image: url(plotly.svg)
 background-size: 100px
@@ -94,7 +115,6 @@ background-position: 90% 8%
 ## Abilene monthly sales, animated by year
 
 ```{r}
-Abilene <- subset(txhousing, city == "Abilene")
 p <- ggplot(Abilene, aes(month, sales, frame = year)) + 
   geom_line()
 ggplotly(p)
@@ -139,6 +159,37 @@ animation_opts(
   ggplotly(p), frame = 1000, easing = "elastic"
 )
 ```
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+
+## Easily change button appearance
+
+```{r}
+animation_button(
+   ggplotly(p), x = 1, xanchor = "right", y = 1, yanchor = "middle"
+)
+```
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+
+## Easily change slider appearance
+
+```{r}
+animation_slider(
+   ggplotly(p), currentvalue = list(prefix = "YEAR ", font = list(color = "red"))
+)
+```
+
+---
+class: middle, center, inverse
+
+# Highlighting (i.e., brushing) in multiple linked views 
 
 ---
 background-image: url(plotly.svg)
