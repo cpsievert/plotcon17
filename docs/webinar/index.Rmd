@@ -152,7 +152,7 @@ library(crosstalk)
 d <- SharedData$new(Abilene, ~year)
 p <- ggplot(d, aes(month, sales)) +
   geom_line(aes(group = year))
-gg <- ggplotly(p)
+gg <- ggplotly(p, tooltip = "year")
 highlight(gg, on = "plotly_click", off = "plotly_doubleclick")
 ```
 
