@@ -44,7 +44,7 @@ background-position: 90% 8%
     * The [NEWS.md](https://github.com/ropensci/plotly/blob/master/NEWS.md) file
     * Package documentation (e.g., `help(animation)` & `help(highlight)`) 
     * Package demos (e.g, `demo(package = "plotly")`)
-    * The [plotly for R book](https://cpsievert.github.io/plotly_book/)
+    * The plotly for R [book](https://cpsievert.github.io/plotly_book/) and [website](https://plot.ly/r/)
     * Blog post coming soon
     
 * Workshops & training
@@ -58,7 +58,7 @@ background-image: url(plotly.svg)
 background-size: 100px
 background-position: 90% 8%
 
-## Official release coming soon
+## Official 4.6.0 release coming soon
 
 * Until then, install dev version with:
 
@@ -70,7 +70,8 @@ devtools::install_github("ropensci/plotly")
 * Additionally, install dependencies for today's examples:
 
 ```r
-devtools::install_github("cpsievert/plotcon17@webinar")
+install.packages("crosstalk")
+install.packages("leaflet")
 ```
 
 ---
