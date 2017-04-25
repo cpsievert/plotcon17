@@ -9,7 +9,11 @@ License: MIT,
 Imports:
   plotly,
   leaflet,
-  crosstalk
+  crosstalk,
+  sf,
+  rmarkdown
 RoxygenNote: 6.0.1
 Remotes:
+  rstudio/leaflet#346,
+  hadley/ggplot2,
   ropensci/plotly
