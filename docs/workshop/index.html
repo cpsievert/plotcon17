@@ -120,61 +120,65 @@ $(document).ready(function () {
 </div>
 
 
-<div id="getting-started" class="section level2">
-<h2>Getting Started</h2>
+<div id="come-prepared" class="section level2">
+<h2>Come prepared</h2>
 <p>Before we start, make sure you can successfully install all <a href="https://github.com/cpsievert/plotcon17/blob/master/DESCRIPTION">the dependencies</a> on your machine:</p>
 <pre class="r"><code>if (!require(devtools)) install.packages(&quot;devtools&quot;)
 devtools::install_github(&quot;cpsievert/plotcon17&quot;)</code></pre>
+<p>Please also install the <a href="https://www.rstudio.com/products/rstudio/download/preview/">preview release of RStudio</a>.</p>
 </div>
 <div id="outline" class="section level2">
 <h2>Outline</h2>
-<p>The workshop will roughly follow this outline (inspired by the <a href="https://cpsievert.github.io/plotly_book/">plotly for R book</a>):</p>
 <ul>
-<li>A tale of 2 interfaces
+<li>Day 1
 <ul>
-<li>Converting <strong>ggplot2</strong> via <code>ggplotly()</code>.</li>
-<li>Directly interfacing to plotly.js with <code>plot_ly()</code>.</li>
-<li>Augmenting <code>ggplotly()</code> via <code>layout()</code> and friends.</li>
-<li>Accessing and leveraging <strong>ggplot2</strong> internals.</li>
-<li>Accessing any plot spec via <code>plotly_json()</code>.</li>
+<li>Getting acquainted with R, RStudio, data wrangling, and ggplot2 (<a href="https://cpsievert.github.io/plotcon17/workshop/1a">slides</a> / <a href="https://github.com/cpsievert/plotcon17/tree/master/docs/workshop/1a">code</a>)</li>
+<li>From static to interactive (<a href="https://cpsievert.github.io/plotcon17/workshop/1b">slides</a> / <a href="https://github.com/cpsievert/plotcon17/tree/master/docs/workshop/1b">code</a>)</li>
 </ul></li>
-<li>The <code>plot_ly()</code> cookbook
+<li>Day 2:
 <ul>
-<li>Scatter traces</li>
-<li>Maps</li>
-<li>Bars &amp; histograms</li>
-<li>Boxplots</li>
-<li>2D frequencies</li>
-<li>3D plots</li>
-</ul></li>
-<li>Arranging multiple views
-<ul>
-<li>Arranging htmlwidget objects</li>
-<li>Merging plotly objects into a subplot</li>
-<li>Navigating many views</li>
-</ul></li>
-<li>Multiple linked views
-<ul>
-<li>Linking views with shiny</li>
-<li>Linking views without shiny</li>
-<li>Linking views “without shiny, inside shiny”</li>
-</ul></li>
-<li>Animating views
-<ul>
-<li>Key frame animations</li>
-<li>Linking animated views</li>
+<li>Linking and animating views without shiny (<a href="https://cpsievert.github.io/plotcon17/workshop/2a">slides</a> / <a href="https://github.com/cpsievert/plotcon17/tree/master/docs/workshop/2a">code</a>)</li>
+<li>Linking views with shiny (<a href="https://cpsievert.github.io/plotcon17/workshop/2b">slides</a> / <a href="https://github.com/cpsievert/plotcon17/tree/master/docs/workshop/2b">code</a>)</li>
 </ul></li>
 </ul>
-<div id="if-we-have-time" class="section level3">
-<h3>IF WE HAVE TIME</h3>
-<ul>
-<li>Advanced topics
-<ul>
-<li>Adding custom behavior with <a href="https://plot.ly/javascript/plotlyjs-function-reference">the plotly.js API</a> and <code>htmlwidgets::onRender()</code>.</li>
-<li>Translating ggplot2 geoms to plotly</li>
-</ul></li>
-</ul>
-</div>
+<!--
+The workshop will roughly follow this outline (inspired by the [plotly for R book](https://cpsievert.github.io/plotly_book/)):
+
+* A tale of 2 interfaces
+    * Converting **ggplot2** via `ggplotly()`.
+    * Directly interfacing to plotly.js with `plot_ly()`.
+    * Augmenting `ggplotly()` via `layout()` and friends.
+    * Accessing and leveraging **ggplot2** internals.
+    * Accessing any plot spec via `plotly_json()`.
+  
+* The `plot_ly()` cookbook
+    * Scatter traces
+    * Maps
+    * Bars & histograms
+    * Boxplots
+    * 2D frequencies
+    * 3D plots
+
+* Arranging multiple views
+    * Arranging htmlwidget objects
+    * Merging plotly objects into a subplot
+    * Navigating many views
+  
+* Multiple linked views
+    * Linking views with shiny
+    * Linking views without shiny
+    * Linking views "without shiny, inside shiny"
+
+* Animating views
+    * Key frame animations
+    * Linking animated views
+  
+### IF WE HAVE TIME
+  
+* Advanced topics
+    * Adding custom behavior with [the plotly.js API](https://plot.ly/javascript/plotlyjs-function-reference) and `htmlwidgets::onRender()`.
+    * Translating ggplot2 geoms to plotly
+-->
 </div>
 
 
