@@ -1,26 +1,19 @@
 # R Workshop at plotcon 2017
 
-## Come prepared
+### Come prepared
 
-Before we start, make sure you can successfully install all [the dependencies](https://github.com/cpsievert/plotcon17/blob/master/DESCRIPTION) on your machine:
+This workshop will be interactive with lots of hands-on exercises. Please come prepared with the [preview release of RStudio](https://www.rstudio.com/products/rstudio/download/preview/), and all [the R package dependencies](https://github.com/cpsievert/plotcon17/blob/master/DESCRIPTION) installed on your machine. You can easily install those R packages with:
 
 ```r
 if (!require(devtools)) install.packages("devtools")
 devtools::install_github("cpsievert/plotcon17")
 ```
 
-Please also install the [preview release of RStudio](https://www.rstudio.com/products/rstudio/download/preview/).
+### Outline
 
-## Outline
+* Day 1 ([slides](https://cpsievert.github.io/plotcon17/workshop/day1) / [code(https://github.com/cpsievert/plotcon17/tree/master/docs/workshop/day1/index.R)]) 
 
-* Day 1
-    * Getting acquainted with R, RStudio, data wrangling, and ggplot2 ([slides](https://cpsievert.github.io/plotcon17/workshop/1a) / [code](https://github.com/cpsievert/plotcon17/tree/master/docs/workshop/1a))
-    * From static to interactive ([slides](https://cpsievert.github.io/plotcon17/workshop/1b) / [code](https://github.com/cpsievert/plotcon17/tree/master/docs/workshop/1b))
-
-* Day 2:
-    * Linking and animating views without shiny ([slides](https://cpsievert.github.io/plotcon17/workshop/2a) / [code](https://github.com/cpsievert/plotcon17/tree/master/docs/workshop/2a))
-    * Linking views with shiny ([slides](https://cpsievert.github.io/plotcon17/workshop/2b) / [code](https://github.com/cpsievert/plotcon17/tree/master/docs/workshop/2b))
-   
+* Day 2 ([slides](https://cpsievert.github.io/plotcon17/workshop/day2) / [code(https://github.com/cpsievert/plotcon17/tree/master/docs/workshop/day2/index.R)]))
 
 
 <!--

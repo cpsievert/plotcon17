@@ -120,26 +120,17 @@ $(document).ready(function () {
 </div>
 
 
-<div id="come-prepared" class="section level2">
-<h2>Come prepared</h2>
-<p>Before we start, make sure you can successfully install all <a href="https://github.com/cpsievert/plotcon17/blob/master/DESCRIPTION">the dependencies</a> on your machine:</p>
+<div id="come-prepared" class="section level3">
+<h3>Come prepared</h3>
+<p>This workshop will be interactive with lots of hands-on exercises. Please come prepared with the <a href="https://www.rstudio.com/products/rstudio/download/preview/">preview release of RStudio</a>, and all <a href="https://github.com/cpsievert/plotcon17/blob/master/DESCRIPTION">the R package dependencies</a> installed on your machine. You can easily install those R packages with:</p>
 <pre class="r"><code>if (!require(devtools)) install.packages(&quot;devtools&quot;)
 devtools::install_github(&quot;cpsievert/plotcon17&quot;)</code></pre>
-<p>Please also install the <a href="https://www.rstudio.com/products/rstudio/download/preview/">preview release of RStudio</a>.</p>
 </div>
-<div id="outline" class="section level2">
-<h2>Outline</h2>
+<div id="outline" class="section level3">
+<h3>Outline</h3>
 <ul>
-<li>Day 1
-<ul>
-<li>Getting acquainted with R, RStudio, data wrangling, and ggplot2 (<a href="https://cpsievert.github.io/plotcon17/workshop/1a">slides</a> / <a href="https://github.com/cpsievert/plotcon17/tree/master/docs/workshop/1a">code</a>)</li>
-<li>From static to interactive (<a href="https://cpsievert.github.io/plotcon17/workshop/1b">slides</a> / <a href="https://github.com/cpsievert/plotcon17/tree/master/docs/workshop/1b">code</a>)</li>
-</ul></li>
-<li>Day 2:
-<ul>
-<li>Linking and animating views without shiny (<a href="https://cpsievert.github.io/plotcon17/workshop/2a">slides</a> / <a href="https://github.com/cpsievert/plotcon17/tree/master/docs/workshop/2a">code</a>)</li>
-<li>Linking views with shiny (<a href="https://cpsievert.github.io/plotcon17/workshop/2b">slides</a> / <a href="https://github.com/cpsievert/plotcon17/tree/master/docs/workshop/2b">code</a>)</li>
-</ul></li>
+<li><p>Day 1 (<a href="https://cpsievert.github.io/plotcon17/workshop/day1">slides</a> / [code(<a href="https://github.com/cpsievert/plotcon17/tree/master/docs/workshop/day1/index.R" class="uri">https://github.com/cpsievert/plotcon17/tree/master/docs/workshop/day1/index.R</a>)])</p></li>
+<li><p>Day 2 (<a href="https://cpsievert.github.io/plotcon17/workshop/day2">slides</a> / [code(<a href="https://github.com/cpsievert/plotcon17/tree/master/docs/workshop/day2/index.R" class="uri">https://github.com/cpsievert/plotcon17/tree/master/docs/workshop/day2/index.R</a>)]))</p></li>
 </ul>
 <!--
 The workshop will roughly follow this outline (inspired by the [plotly for R book](https://cpsievert.github.io/plotly_book/)):
@@ -204,7 +195,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

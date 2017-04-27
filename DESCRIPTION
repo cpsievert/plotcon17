@@ -11,9 +11,11 @@ Imports:
   leaflet,
   crosstalk,
   sf,
-  rmarkdown
+  rmarkdown,
+  magrittr
 RoxygenNote: 6.0.1
 Remotes:
   rstudio/leaflet#346,
   hadley/ggplot2,
-  ropensci/plotly
+  ropensci/plotly,
+  hrbrmstr/albersusa

@@ -1,0 +1,548 @@
+---
+title: "Getting (re)-acquainted with R, RStudio, data wrangling, ggplot2, and plotly"
+venue: "plotcon 17"
+type: "workshop"
+recording: "TBA"
+output:
+  xaringan::moon_reader:
+    chakra: "../remark_lib/remark-latest.min.js"
+    nature:
+      # approx the golden ratio
+      ratio: '14.6:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      navigation:
+        scroll: false
+date: "Slides: https://bit.ly/plotcon17workshop <br /> <br /> Slides released under <a href='https://github.com/cpsievert/talks/blob/gh-pages/LICENSE'>Creative Commons</a>"
+author: "Carson Sievert"
+---
+class: inverse, center
+background-image: url(../your-turn.jpeg)
+background-size: contain
+
+## Your Turn
+
+Share (with your neighbor) 3 things you're hoping to get from this workshop
+
+Message me your answers on [Slack](https://plotconrworkshop.slack.com) (I'll keep 'em confidential)
+
+.footnote[
+PS. remember this background image -- it means I want something from you!
+]
+
+---
+
+### About me
+
+* PhD in statistics from Iowa State (defended 4 months ago!)
+* Maintainer of plotly's R package (for nearly 2 years!)
+    * Before that: animint, LDAvis, pitchRx, rdom
+
+### About the workshop
+
+* Today is all about motivation and foundations.
+* Tomorrow will be about recent advancements: animation, linked views, & shiny.
+* I'm hoping to save a couple hours tomorrow for a Q&A session.
+  * Feel free to ask me about personal projects.
+  * I'll have some "advanced" exercises, in case you don't already have your own `r emo::ji("wink")`
+
+---
+
+## R wisdom
+
+> Everything that **exists** is an **object**.
+> 
+> Everything that _happens_ is a _function call_. 
+>
+> -- John Chambers
+
+---
+
+## R wisdom
+
+> Everything that **exists** is an **object**.
+> 
+> Everything that _happens_ is a _function call_. 
+>
+> -- John Chambers
+
+<div align="center" >
+  <img src="mind-blown.gif" width="600" height="380"/>
+</div>
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  eval = FALSE,
+  message = FALSE,
+  fig.width = 10,
+  fig.height = 4,
+  comment = "#>",
+  collapse = TRUE
+)
+```
+
+---
+## Universal truths
+
+Use the `str()` function to inspect any object
+
+```{r, eval = TRUE}
+str(mtcars)
+```
+
+Use `<-` to assign value(s) to a name
+
+```{r, eval = TRUE}
+nms <- names(mtcars)
+nms
+```
+
+---
+## The pipe operator (`%>%`)
+
+Takes object on LHS and inserts into function on RHS. 
+
+```{r, eval = TRUE}
+library(magrittr)
+mtcars %>% names()
+```
+
+Makes function composition more readable
+
+```{r, eval = TRUE}
+# read left-to-right
+mtcars %>% names() %>% length()
+
+
+# not inside out
+length(names(mtcars))
+```
+
+---
+## R's basic data structures
+
+<div align="center" >
+  <img src="data.png" width="800" height="300"/>
+</div>
+
+.footnote[
+Read Hadley Wickham's brilliant chapter on data structures http://adv-r.had.co.nz/Data-structures.html
+]
+
+
+---
+## A data frame holds (homo or hetero!) 1d vectors.
+
+<div align="center" >
+  <img src="data2.png" width="800" height="300"/>
+</div>
+
+.footnote[
+Read Hadley Wickham's brilliant chapter on data structures http://adv-r.had.co.nz/Data-structures.html
+]
+
+---
+## More than a table
+
+<div align="center" >
+  <img src="list-column.png" width="400" height="400"/>
+</div>
+
+.footnote[
+Watch Jenny Bryan's brilliant talk https://www.youtube.com/watch?v=4MfUCX_KpdE
+]
+
+---
+class: inverse, middle, center
+background-image: url(https://media.giphy.com/media/h4Z6RfuQycdiM/giphy.gif)
+background-size: contain
+
+
+# How is this useful?
+
+---
+
+# What data goes into drawing this map?
+
+<iframe src="map.html" width="100%" height="550" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+
+```{r}
+library(albersusa)
+usa <- usa_sf("laea")
+
+library(dplyr)
+usa %>%
+ select(name, pop_2010, geometry) %>%
+ View()
+```
+
+<div align="center">
+  <img src="view.png" width="600" height="150" />
+</div>
+
+```{r, echo = FALSE, eval = TRUE}
+library(albersusa)
+library(dplyr)
+```
+
+```{r, eval = TRUE}
+usa_sf("laea") %>% select(pop_2010, geometry) %>% plot()
+```
+
+---
+class: inverse, middle, center
+
+# Rows should represent the unit of interest!!! 
+
+Hadley Wickham (probably)
+
+---
+
+## An aside on dplyr
+
+The R package **dplyr** makes common SQL-like operations fast and easy<sup>1</sup>
+
+Important single table operations:
+
+* `select()`
+* `mutate()`
+* `filter()`
+* `arrange()`
+* `distinct()`
+* `summarise()`
+
+I will use dplyr sporadically through the workshop...please stop me if anything needs more explaining
+
+.footnote[
+[1]: It will even perform SQL queries for you -- using the same interface!
+]
+
+---
+class: inverse, center
+background-image: url(../your-turn.jpeg)
+background-size: contain
+
+## Your turn
+
+See `help(geom_sf, package = "ggplot2")`. Can you plot population by state using `geom_sf()` and `usa_sf("laea")`?
+
+**Bonus:** Use `plotly::ggplotly()` to convert it to an interactive version!
+
+.footnote[
+Solution is [here](01-your-turn.R)
+
+PS. Someone commented "I would really like to learn more about working with shapefiles". Hopefully `sf::st_read()` *just works* for you!
+]
+
+---
+
+```{r}
+library(plotly)
+usa_sf <- mutate(
+  usa_sf("laea"), txt = paste("The state of", name, "had \n", pop_2010, "people in 2010")
+)
+p <- ggplot(usa_sf) + 
+  geom_sf(aes(fill = pop_2010, text = txt)) 
+ggplotly(p, tooltip = "text")
+```
+
+<iframe src="map2.html" width="100%" height="550" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+class: inverse, center, middle
+
+# More compelling examples
+
+Tooltips & zooming are cool -- but we can do more!
+
+---
+class: center, middle
+
+<a href="https://twitter.com/galka_max/status/856167515701084166" target="_blank" >
+  <img src="europe.png" height="700" width="600"/>
+</a>
+
+---
+## [Add 2 lines](https://gist.github.com/cpsievert/7dd28a478b4c051180d802321353259d), & voila!
+
+<iframe src="europe.html" width="100%" height="600" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+class: center, middle
+
+<a href="https://twitter.com/jalapic/status/732360615730266112" target="_blank" >
+  <img src="epl.png" height="650" width="600"/>
+</a>
+
+---
+
+See `demo("highlight-epl", package = "plotly")`
+
+<iframe src="epl.html" width="100%" height="650" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+class: inverse, center, middle
+
+# Dislaimer
+
+I'd say ~80% of the ggplot2 API is correctly translated by `ggplotly()`.
+
+I'm aiming for ~99% before the end of the year.
+
+Regardless, knowing how it all works helps to workaround limitations
+
+---
+class: inverse, center
+background-image: url(magic.gif)
+background-size: contain
+
+# How does it work?
+
+---
+
+## ggplotly returns a plotly htmlwidget
+
+```{r}
+class(p)
+#> [1] "gg"     "ggplot"
+gg <- ggplotly(p, tooltip = "text")
+class(gg)
+#> [1] "plotly"     "htmlwidget"
+```
+
+The [htmlwidgets](http://www.htmlwidgets.org/) framework guarantees things *just work* in any context.<sup>1</sup>
+
+The htmlwidgets gallery has 85 registered widgets to date! http://gallery.htmlwidgets.org/
+
+.footnote[
+[1]: For example, at your R prompt, inside RStudio, rmarkdown, or shiny apps
+]
+
+---
+class: inverse, center
+background-image: url(../your-turn.jpeg)
+background-size: contain
+
+## Your Turn
+
+Embed the `gg` map in an rmarkdown document.
+
+**Bonus**: get the plot to print in an [r notebook](http://rmarkdown.rstudio.com/r_notebooks.html)
+
+<img src="r-notebook.png" width="400" height="200" />
+
+---
+
+## What happens when you print a plotly htmlwidget?
+
+<div align="center" >
+  <img src="printing.svg" width="500" height="390"/>
+</div>
+
+
+.footnote[
+All htmlwidgets take this same (R list -> JSON -> JavaScript -> HTML) approach!
+
+Every htmlwidget is defined through an R list. Any R list maps to JSON through **jsonlite** package
+]
+
+---
+
+## Mapping R list to JSON
+
+```{r, eval = TRUE}
+barchart <- list(
+  data = list(list(
+    x = c("a", "b", "c"),
+    y = c(1, 2, 3),
+    type = "bar"
+  ))
+)
+plotly:::to_JSON(barchart, pretty = TRUE)
+```
+
+.footnote[
+**Pro tip:** Did you know `:::` can access *any* object from *any* package (exported or not)?
+]
+
+---
+## Indexing/subsetting in R
+
+Grab a list element with `$` or `[[`
+
+```{r, eval = TRUE}
+str(barchart$data)
+identical(barchart$data, barchart[["data"]])
+```
+
+There is also `[`, which _always_ returns the "container"!
+
+```{r, eval = TRUE}
+str(barchart["data"])
+```
+
+---
+
+```{r, eval = TRUE}
+str(mtcars["vs"])
+str(mtcars[["vs"]])
+```
+
+<div align="center" >
+  <img src="indexing.png" width="550" height="500"/>
+</div>
+
+
+---
+## Mapping R list to plotly
+
+```{r, eval = TRUE}
+library(plotly)
+as_widget(barchart)
+```
+
+---
+## PSA: use `plot_ly()` over `as_widget()`
+
+```{r, eval = TRUE}
+# plot_ly() adds some useful abstractions that we'll get to later
+plot_ly() %>%
+  add_bars(
+    x =  c("a", "b", "c"),
+    y = c(1, 2, 3), 
+    unsupported = "nonsense"
+  )
+```
+
+---
+class: inverse, middle, center
+
+# Three ways to widget<sup>1</sup>
+
+`ggplotly()`: translates ggplot to widget
+
+`as_widget()`: translates R lists to widget
+
+`plot_ly()`: translate a custom R-specific grammar to widget
+
+.footnote[
+[1]: Actually, four, if you count `api_download_file()`
+]
+
+---
+## Inspect the JSON behind any widget
+
+```{r}
+# In recent versions of RStudio -- View(gg$x)
+plotly_json(gg)
+```
+
+<iframe src="spec.html" width="90%" height="325" seamless="seamless" frameBorder="0"> </iframe>
+
+
+The `data`, `layout`, and `config` attributes are official plotly.js attributes covered in the [figure reference](https://plot.ly/r/reference/).
+
+The other attributes are unique to the R package (don't worry about them).
+
+
+---
+## Modify any widget
+
+`style()` modifies data attributes. `layout()` modifies the layout.
+
+```{r}
+gg2 <- gg %>%
+  style(mode = "markers+lines", traces = 2) %>%
+  layout(title = "A map of 2010 population", margin = list(t = 30))
+```
+
+<iframe src="map3.html" width="100%" height="550" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+# Note the modification!
+
+```{r}
+# The 'x' element stores the list converted to JSON
+# plotly_json() just provides a more pleasant interface to gg$x
+str(gg2$x$data[[2]])
+```
+
+```r
+#> List of 14
+#>  $ x         : num [1:238] -324546 -325004 -325571 -325589 -326462 ...
+#>  $ y         : num [1:238] -110164 -119390 -130838 -131207 -149343 ...
+#>  $ text      : chr "The state of Wyoming had <br /> 564358 people in 2010"
+#>  $ type      : chr "scatter"
+*#>  $ mode      : chr "markers+lines"
+#>  $ line      :List of 3
+#>   ..$ width: num 1.89
+#>   ..$ color: chr "rgba(89,89,89,1)"
+#>   ..$ dash : chr "solid"
+#>  $ fill      : chr "toself"
+#>  $ fillcolor : chr "rgba(19,43,67,1)"
+#>  $ hoveron   : chr "fills"
+#>  $ showlegend: logi FALSE
+#>  $ xaxis     : chr "x"
+#>  $ yaxis     : chr "y"
+#>  $ hoverinfo : chr "text"
+#>  $ frame     : chr NA
+```
+
+---
+## Can also add data to any widget
+
+There are a number of `add_*()` functions (e.g., `add_bars()`, `add_polygons()`, `add_trace()`).
+
+```{r}
+d <- gg$x$data[[52]]
+add_polygons(gg, x = d$x, y = d$y, color = I("red"), inherit = FALSE)
+```
+
+<iframe src="map4.html" width="100%" height="550" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+## Resources for studying the figure reference
+
+https://plot.ly/r/reference/
+
+https://github.com/rreusser/plotly-doc-viewer
+
+```{r}
+# In recent versions of RStudio -- View(plotly:::Schema)
+schema()
+```
+
+<iframe src="schema.html" width="100%" height="400" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+class: inverse, center
+background-image: url(../your-turn.jpeg)
+background-size: contain
+
+## Your Turn
+
+Overlay text on top of Wyoming using either a [scatter trace with text mode](https://plot.ly/r/reference/#scatter-mode) or an [annotation](https://plot.ly/r/reference/#layout-annotations)
+
+**Tip**: Use `sf::st_centroid()` to find the center point of polygon(s).
+
+**Bonus**: Can you label all the states?
+
+
+.footnote[
+Solution is [here](02-your-turn.R)
+]
+
+---
+class: inverse, center, middle
+background-image: url(../your-turn.jpeg)
+background-size: contain
+
+
+# Time for Q & A
+
+.footnote[
+Have a question that the whole group can benefit from? Ask me on Slack!
+]
