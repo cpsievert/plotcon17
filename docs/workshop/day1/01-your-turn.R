@@ -8,11 +8,13 @@ p <- ggplot(usa_sf) +
 # you can ignore the warning about text...
 ggplotly(p)
 
-
-# SharedData allows you define an "interaction unit"
+# Want to outline the state on hover?
+# Use SharedData to assign an "interaction unit"
+# By default, each row is the "interaction unit" (in this case, state)
 library(crosstalk)
 usa_sd <- SharedData$new(usa_sf)
 
+# same as before
 p <- ggplot(usa_sd) + 
   geom_sf(aes(fill = pop_2010, text = name)) 
 

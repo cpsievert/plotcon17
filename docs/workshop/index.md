@@ -9,11 +9,11 @@ if (!require(devtools)) install.packages("devtools")
 devtools::install_github("cpsievert/plotcon17")
 ```
 
-### Outline
+### Materials
 
-* Day 1 ([slides](https://cpsievert.github.io/plotcon17/workshop/day1) / [code(https://github.com/cpsievert/plotcon17/tree/master/docs/workshop/day1/index.R)]) 
+Day 1: [slides](https://cpsievert.github.io/plotcon17/workshop/day1) and [code](https://github.com/cpsievert/plotcon17/tree/master/docs/workshop/day1/index.R)
 
-* Day 2 ([slides](https://cpsievert.github.io/plotcon17/workshop/day2) / [code(https://github.com/cpsievert/plotcon17/tree/master/docs/workshop/day2/index.R)]))
+Day 2: [slides](https://cpsievert.github.io/plotcon17/workshop/day2) and [code](https://github.com/cpsievert/plotcon17/tree/master/docs/workshop/day2/index.R)
 
 
 <!--

@@ -108,5 +108,10 @@ gg2 <- gg %>%
 str(gg2$x$data[[2]])
 
 ## ------------------------------------------------------------------------
+d <- gg$x$data[[52]]
+add_polygons(gg, x = d$x, y = d$y, color = I("red"), inherit = FALSE)
+
+## ------------------------------------------------------------------------
+# In recent versions of RStudio -- View(plotly:::Schema)
 schema()
 

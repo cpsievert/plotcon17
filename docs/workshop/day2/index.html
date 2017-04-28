@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Advanced plotly</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Carson Sievert" />
+    <link href="index_files/remark-css-0.0.1/example.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Advanced plotly
+### Carson Sievert
+### Slides: <a href="https://bit.ly/plotcon17workshop" class="uri">https://bit.ly/plotcon17workshop</a> <br /> <br /> Slides released under <a href='https://github.com/cpsievert/talks/blob/gh-pages/LICENSE'>Creative Commons</a>
+
+---
+
+
+
+
+
+## Monthly housing sales
+
+
+```r
+library(plotly)
+txhousing
+#&gt; # A tibble: 8,602 × 9
+#&gt;       city  year month sales   volume median listings inventory     date
+#&gt;      &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+#&gt; 1  Abilene  2000     1    72  5380000  71400      701       6.3 2000.000
+#&gt; 2  Abilene  2000     2    98  6505000  58700      746       6.6 2000.083
+#&gt; 3  Abilene  2000     3   130  9285000  58100      784       6.8 2000.167
+#&gt; 4  Abilene  2000     4    98  9730000  68600      785       6.9 2000.250
+#&gt; 5  Abilene  2000     5   141 10590000  67300      794       6.8 2000.333
+#&gt; 6  Abilene  2000     6   156 13910000  66900      780       6.6 2000.417
+#&gt; 7  Abilene  2000     7   152 12635000  73500      742       6.2 2000.500
+#&gt; 8  Abilene  2000     8   131 10710000  75000      765       6.4 2000.583
+#&gt; 9  Abilene  2000     9   104  7615000  64500      771       6.5 2000.667
+#&gt; 10 Abilene  2000    10   101  7040000  59300      764       6.6 2000.750
+#&gt; # ... with 8,592 more rows
+```
+
+
+---
+## Abilene monthly sales
+
+
+```r
+Abilene &lt;- subset(txhousing, city == "Abilene")
+p &lt;- ggplot(Abilene, aes(month, sales, group = year)) + 
+  geom_line()
+ggplotly(p, dynamicTicks = "x")
+```
+
+&lt;iframe src="01.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+
+---
+## Abilene monthly sales, animated by year
+
+
+```r
+p &lt;- ggplot(Abilene, aes(month, sales, frame = year)) + 
+  geom_line()
+ggplotly(p)
+```
+
+&lt;iframe src="02.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+
+---
+## Works in `plot_ly()` as well
+
+
+```r
+p &lt;- plot_ly(Abilene, x = ~month, y = ~log(sales), frame = ~year, showlegend = F)
+add_lines(p)
+```
+
+&lt;iframe src="03.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+
+---
+class: inverse
+
+## Your Turn
+
+#### Part 1
+
+Compare the output of `add_lines(p, color = I("black"))` with `add_lines(p, color = "black")`. Why is one 'right' and one 'wrong'?
+
+**Hint**: Compare the output of `qplot(data = Abilene, x = month, y = sales, color = I("black"))` with `qplot(data = Abilene, x = month, y = sales, color = "black")`.
+
+#### Part 2
+
+`plot_ly()` and the `add_*()` functions support a number of "special" arguments (see `help(plot_ly)`). They make it easier to map data to visual aesthetics in the [figure reference](https://plot.ly/r/reference). 
+
+Try changing the default `linetype` from `"solid"` to something else. 
+
+**Hint**: `View(Schema$traces$scatter$attributes$line)`
+
+---
+## Animations are layer specific
+
+
+```r
+p &lt;- ggplot(Abilene, aes(month, sales)) + 
+  geom_line(aes(group = year), alpha = 0.2) +
+  geom_line(aes(frame = year), color = "red")
+ggplotly(p)
+```
+
+&lt;iframe src="04.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+
+---
+## Easily change animation options
+
+
+```r
+animation_opts(
+  ggplotly(p), frame = 1000, easing = "elastic"
+)
+```
+
+&lt;iframe src="05.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+
+---
+## Easily change button appearance
+
+
+```r
+animation_button(
+   ggplotly(p), x = 1, xanchor = "right", y = 1, yanchor = "middle"
+)
+```
+
+&lt;iframe src="06.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+
+---
+## Easily change slider appearance
+
+
+```r
+animation_slider(
+   ggplotly(p), currentvalue = list(prefix = "YEAR ", font = list(color = "red"))
+)
+```
+
+&lt;iframe src="07.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+
+---
+class: center, middle
+background-image: url(hans-rosling.jpg)
+background-size: contain
+
+## Gapminder data
+
+---
+
+
+```r
+data(gapminder, package = "gapminder")
+gg &lt;- ggplot(gapminder, aes(gdpPercap, lifeExp, color = continent, size = pop)) +
+  geom_point(alpha = 0.1) +
+  geom_point(aes(frame = year, ids = country)) +
+  scale_x_log10()
+ggplotly(gg) %&gt;% animation_opts(1000, redraw = FALSE)
+```
+
+&lt;iframe src="07b.html" width="100%" height="500" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+
+---
+class: inverse, center
+background-image: url(../your-turn.jpeg)
+background-size: contain
+
+## Your Turn
+
+Read through [this thread](https://github.com/ropensci/plotly/issues/957). Can you take what is there to make a *cumulative* animation of the gapminder data?
+
+**Hint**: Use `geom_path()` over `geom_point()`
+
+.footnote[
+PS. hopefully we will have more official solution someday.
+
+Solution is [here](01-yout-turn.R)
+]
+
+---
+class: middle, center, inverse
+
+# Highlighting (i.e., brushing) in multiple linked views 
+
+---
+## Highlighting via crosstalk
+
+
+```r
+library(crosstalk)
+d &lt;- SharedData$new(Abilene, ~year)
+p &lt;- ggplot(d, aes(month, sales)) +
+  geom_line(aes(group = year))
+ggplotly(p, tooltip = "year")
+```
+
+&lt;iframe src="08.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+
+---
+## Highlighting in small multiples
+
+
+```r
+d &lt;- subset(txhousing, city %in% c("Galveston", "Midland", "Odessa", "South Padre Island"))
+sd &lt;- SharedData$new(d, ~year)
+p &lt;- ggplot(sd, aes(month, median, group = year)) + geom_line() +
+  facet_wrap(~city, ncol = 2)
+(gg &lt;- ggplotly(p, tooltip = "year"))
+```
+
+&lt;iframe src="09.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+
+---
+## Highlight on hover
+
+
+```r
+highlight(gg, "plotly_hover")
+```
+
+&lt;iframe src="09b.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+
+---
+## Set default values
+
+
+```r
+highlight(gg, defaultValues = "2006")
+```
+
+&lt;iframe src="09c.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+
+---
+## Making comparisons with dynamic brush
+
+
+```r
+highlight(
+  gg, dynamic = TRUE, persistent = TRUE, selectize = TRUE
+)
+```
+
+&lt;iframe src="10.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+
+---
+## Customize the appearance of selections
+
+
+```r
+highlight(
+  gg, dynamic = TRUE, persistent = TRUE, 
+  selected = attrs_selected(mode = "markers+lines", marker = list(symbol = "x"))
+)
+```
+
+&lt;iframe src="11.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+
+---
+## m-to-n linking
+
+
+```r
+demo("highlight-pipeline", package = "plotly")
+```
+
+&lt;iframe src="11b.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+
+---
+class: inverse, center
+background-image: url(../your-turn.jpeg)
+background-size: contain
+
+## Your turn
+
+(1) Modify [the last demo](https://github.com/ropensci/plotly/blob/master/demo/highlight-pipeline.R) to have persistent and dynamic selection. Try supplying your own custom color palette.
+
+(2) Read the code. Change `add_bars()` to `add_markers()`. How in the world does this work?
+
+
+---
+class: bottom, left 
+background-image: url(pipeline.svg)
+background-size: contain
+
+## The 'data pipeline'
+
+Where does the pipeline &lt;br /&gt; 'live'?
+
+
+---
+background-image: url(crosstalk.svg)
+background-size: contain
+
+## The general model
+
+.footnote[
+All the "updating logic" is self-contained in your browser via JavaScript, which is good!
+]
+
+---
+## Binning (i.e., transforming) the target
+
+
+```r
+demo("highlight-binned-target", package = "plotly")
+```
+
+&lt;iframe src="11c.html" width="100%" height="480" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+
+---
+## Binning (i.e., transforming) the target
+
+
+```r
+demo("highlight-binned-target", package = "plotly")
+```
+
+&lt;iframe src="11d.html" width="100%" height="525" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+
+---
+class: inverse, center, middle
+
+# You can only go so far without shiny...
+
+---
+class: bottom
+background-image: url(zikar.gif)
+background-size: contain
+
+### https://github.com/cpsievert/zikar
+
+---
+class: bottom
+background-image: url(eechidna.gif)
+background-size: contain
+
+### https://github.com/ropenscilabs/eechidna
+
+---
+class: center, middle
+background-image: url(combine-powers.gif)
+background-size: contain
+
+# ...but we can combine powers
+
+---
+class: bottom
+background-image: url(bcviz.gif)
+background-size: contain
+
+### https://github.com/cpsievert/bcviz
+
+---
+class: center, middle
+
+# I promise...
+
+We will get to shiny, but we can do *much* more *without* shiny&lt;sup&gt;1&lt;/sup&gt;
+
+.footnote[
+[1]: why this is important? Ask me!
+]
+
+---
+## Animating selections
+
+
+```r
+a &lt;- SharedData$new(Abilene, ~month)
+p &lt;- ggplot(a, aes(month, sales, frame = year)) + 
+  geom_line() + geom_point()
+highlight(ggplotly(p), "plotly_selected")
+```
+
+&lt;iframe src="13.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+
+---
+## Avoid overplotting
+
+
+```r
+g &lt;- SharedData$new(gapminder, ~continent)
+gg &lt;- ggplot(g, aes(gdpPercap, lifeExp, color = continent, frame = year)) +
+  geom_point(aes(size = pop, ids = country)) +
+  geom_smooth(se = FALSE, method = "lm") 
+ggplotly(gg + scale_x_log10())
+```
+
+&lt;iframe src="14.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+
+---
+
+
+```r
+demo("tour-USArrests", package = "plotly")
+```
+
+&lt;a href="15.html" target="_blank" &gt;
+  &lt;img src="usarrests.gif" width="900" height="550" /&gt;
+&lt;/a&gt;
+
+---
+class: inverse, middle, center
+
+# Filter vs selection
+
+The `highlight()` function provides ways to handle/configure *selection* events
+
+You can also trigger *filter* events through **crosstalk** widgets.
+
+They are similar, but axes respond (i.e., relayout) to *filter* events.&lt;sup&gt;1&lt;/sup&gt;
+
+.footnote[
+[1]: when using `ggplotly()`, you need to specify `dynamicTicks = TRUE`
+]
+
+---
+## Crosstalk's filtering widgets
+
+
+
+```r
+tx &lt;- SharedData$new(txhousing)
+widgets &lt;- bscols(widths = c(12, 12, 12),
+  filter_select("city", "Cities", tx, ~city),
+  filter_slider("sales", "Sales", tx, ~sales),
+  filter_checkbox("year", "Years", tx, ~year, inline = TRUE)
+)
+widgets
+```
+
+&lt;iframe src="crosstalk/1/index.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+
+---
+## Filtering
+
+
+```r
+bscols(
+  widths = c(4, 8), widgets, 
+  plot_ly(tx, x = ~date, y = ~median, showlegend = FALSE) %&gt;% 
+    add_lines(color = ~city, colors = "black", connectgaps = FALSE) # bug in plotly.js?
+)
+```
+
+&lt;iframe src="crosstalk/2/index.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+
+
+---
+## Talk to other crosstalk-enabled widgets
+
+
+```r
+library(leaflet)
+sd &lt;- SharedData$new(quakes)
+p &lt;- plot_ly(sd, x = ~depth, y = ~mag) %&gt;% add_markers(alpha = 0.5) %&gt;% highlight("plotly_selected")
+map &lt;- leaflet(sd) %&gt;% addTiles() %&gt;% addCircles()
+bscols(p, map)
+```
+
+&lt;iframe src="leaflet/index.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+
+
+---
+class: inverse, center
+background-image: url(../your-turn.jpeg)
+background-size: contain
+
+## Your Turn
+
+Add some filter widgets to the earthquakes example.
+
+**Bonus**: Try saving the result to an HTML file.
+
+**Hint**: You can save htmlwidgets to a self-contained HTML via `htmlwidgets::saveWidget()`, but this approach requires the more general `htmltools::html_print()`
+
+.footnote[
+Solution is [here](02-your-turn.R)
+]
+
+---
+class: center, middle, inverse
+
+## Expectations vs reality
+
+.pull-left[
+  &lt;img src="thin-ice.gif" height = "500" width = "350" /&gt;
+]
+
+.pull-right[
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+
+  **plotly** has advanced support for *selection* events (e.g., `persistent`, `dynamic`, `selectize`)
+
+  Other [**crosstalk**-enabled htmlwidgets](https://rstudio.github.io/crosstalk/) likely won't support these additional *selection* event features.
+  
+  However, *filter* events should generally be supported.
+]
+
+---
+## Shiny is a web application framework
+
+Web applications are generally more powerful and flexible; but also more complicated, less responsive, and difficult to share.
+
+&lt;div align="center" &gt;
+  &lt;img src="server-client.svg" width="700" height="400" /&gt;
+&lt;/div&gt;
+
+---
+## [Accessing user events](events-shiny.R) in shiny
+
+&lt;div align="center" &gt;
+  &lt;img src="events-shiny.gif" width="900" height="550" /&gt;
+&lt;/div&gt;
+
+This functionality is tied to `plotOutput()`, which doesn't support web-based graphics.
+
+---
+## [Accessing plotly events](events-plotly.R) in shiny
+
+
+&lt;div align="center" &gt;
+  &lt;img src="events-plotly.gif" width="900" height="550" /&gt;
+&lt;/div&gt;
+
+---
+class: inverse, center
+background-image: url(../your-turn.jpeg)
+background-size: contain
+
+## Your Turn
+
+Program an app to populate a bar chart reflecting the selection, sort of like this:
+
+
+&lt;div align="center" &gt;
+  &lt;img src="events-plotly-linked.gif" width="600" height="550" /&gt;
+&lt;/div&gt;
+
+
+---
+## [Targetting events](events-plotly.R)
+
+
+&lt;div align="center" &gt;
+  &lt;img src="plotlyLinkedClick.gif" width="900" height="500" /&gt;
+&lt;/div&gt;
+
+
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+class: center, middle
+
+# Thanks!
+
+Resources for more learning:
+
+https://cpsievert.github.io/plotly_book/ &lt;br /&gt;
+https://plot.ly/r/ &lt;br /&gt;
+https://cpsievert.github.io/talks/ &lt;br /&gt;
+https://github.com/cpsievert/phd-thesis &lt;br /&gt;
+https://github.com/cpsievert/pedestrians &lt;br /&gt;
+https://github.com/cpsievert/bcviz &lt;br /&gt;
+https://github.com/cpsievert/shiny_apps &lt;br /&gt;
+
+Reach out to me
+
+Twitter: [@cpsievert](https://twitter.com/cpsievert) &lt;br /&gt;
+GitHub: [@cpsievert](https://github.com/cpsievert) &lt;br /&gt;
+Email: &lt;cpsievert1@gmail.com&gt; &lt;br /&gt;
+Web: &lt;http://cpsievert.github.io/&gt;
+
+
+---
+class: center, middle
+background-image: url(plotly.svg)
+background-size: contain
+    </textarea>
+<script src="../remark_lib/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "14.6:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -1,0 +1,567 @@
+---
+title: "Advanced plotly"
+venue: "plotcon 17"
+type: "workshop"
+recording: "NA"
+output:
+  xaringan::moon_reader:
+    chakra: "../remark_lib/remark-latest.min.js"
+    nature:
+      # approx the golden ratio
+      ratio: '14.6:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      navigation:
+        scroll: false
+date: "Slides: https://bit.ly/plotcon17workshop <br /> <br /> Slides released under <a href='https://github.com/cpsievert/talks/blob/gh-pages/LICENSE'>Creative Commons</a>"
+author: "Carson Sievert"
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  fig.width = 10,
+  fig.height = 4,
+  comment = "#>",
+  collapse = TRUE,
+  eval = FALSE
+)
+```
+
+## Monthly housing sales
+
+```{r, eval = TRUE}
+library(plotly)
+txhousing
+```
+
+
+---
+## Abilene monthly sales
+
+```{r}
+Abilene <- subset(txhousing, city == "Abilene")
+p <- ggplot(Abilene, aes(month, sales, group = year)) + 
+  geom_line()
+ggplotly(p, dynamicTicks = "x")
+```
+
+<iframe src="01.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+## Abilene monthly sales, animated by year
+
+```{r}
+p <- ggplot(Abilene, aes(month, sales, frame = year)) + 
+  geom_line()
+ggplotly(p)
+```
+
+<iframe src="02.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+## Works in `plot_ly()` as well
+
+```{r}
+p <- plot_ly(Abilene, x = ~month, y = ~log(sales), frame = ~year, showlegend = F)
+add_lines(p)
+```
+
+<iframe src="03.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+class: inverse
+
+## Your Turn
+
+#### Part 1
+
+Compare the output of `add_lines(p, color = I("black"))` with `add_lines(p, color = "black")`. Why is one 'right' and one 'wrong'?
+
+**Hint**: Compare the output of `qplot(data = Abilene, x = month, y = sales, color = I("black"))` with `qplot(data = Abilene, x = month, y = sales, color = "black")`.
+
+#### Part 2
+
+`plot_ly()` and the `add_*()` functions support a number of "special" arguments (see `help(plot_ly)`). They make it easier to map data to visual aesthetics in the [figure reference](https://plot.ly/r/reference). 
+
+Try changing the default `linetype` from `"solid"` to something else. 
+
+**Hint**: `View(Schema$traces$scatter$attributes$line)`
+
+---
+## Animations are layer specific
+
+```{r}
+p <- ggplot(Abilene, aes(month, sales)) + 
+  geom_line(aes(group = year), alpha = 0.2) +
+  geom_line(aes(frame = year), color = "red")
+ggplotly(p)
+```
+
+<iframe src="04.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+## Easily change animation options
+
+```{r}
+animation_opts(
+  ggplotly(p), frame = 1000, easing = "elastic"
+)
+```
+
+<iframe src="05.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+## Easily change button appearance
+
+```{r}
+animation_button(
+   ggplotly(p), x = 1, xanchor = "right", y = 1, yanchor = "middle"
+)
+```
+
+<iframe src="06.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+## Easily change slider appearance
+
+```{r}
+animation_slider(
+   ggplotly(p), currentvalue = list(prefix = "YEAR ", font = list(color = "red"))
+)
+```
+
+<iframe src="07.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+class: center, middle
+background-image: url(hans-rosling.jpg)
+background-size: contain
+
+## Gapminder data
+
+---
+
+```{r}
+data(gapminder, package = "gapminder")
+gg <- ggplot(gapminder, aes(gdpPercap, lifeExp, color = continent, size = pop)) +
+  geom_point(alpha = 0.1) +
+  geom_point(aes(frame = year, ids = country)) +
+  scale_x_log10()
+ggplotly(gg) %>% animation_opts(1000, redraw = FALSE)
+```
+
+<iframe src="07b.html" width="100%" height="500" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+class: inverse, center
+background-image: url(../your-turn.jpeg)
+background-size: contain
+
+## Your Turn
+
+Read through [this thread](https://github.com/ropensci/plotly/issues/957). Can you take what is there to make a *cumulative* animation of the gapminder data?
+
+**Hint**: Use `geom_path()` over `geom_point()`
+
+.footnote[
+PS. hopefully we will have more official solution someday.
+
+Solution is [here](01-yout-turn.R)
+]
+
+---
+class: middle, center, inverse
+
+# Highlighting (i.e., brushing) in multiple linked views 
+
+---
+## Highlighting via crosstalk
+
+```{r}
+library(crosstalk)
+d <- SharedData$new(Abilene, ~year)
+p <- ggplot(d, aes(month, sales)) +
+  geom_line(aes(group = year))
+ggplotly(p, tooltip = "year")
+```
+
+<iframe src="08.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+## Highlighting in small multiples
+
+```{r}
+d <- subset(txhousing, city %in% c("Galveston", "Midland", "Odessa", "South Padre Island"))
+sd <- SharedData$new(d, ~year)
+p <- ggplot(sd, aes(month, median, group = year)) + geom_line() +
+  facet_wrap(~city, ncol = 2)
+(gg <- ggplotly(p, tooltip = "year"))
+```
+
+<iframe src="09.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+## Highlight on hover
+
+```{r}
+highlight(gg, "plotly_hover")
+```
+
+<iframe src="09b.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+## Set default values
+
+```{r}
+highlight(gg, defaultValues = "2006")
+```
+
+<iframe src="09c.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+## Making comparisons with dynamic brush
+
+```{r}
+highlight(
+  gg, dynamic = TRUE, persistent = TRUE, selectize = TRUE
+)
+```
+
+<iframe src="10.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+## Customize the appearance of selections
+
+```{r}
+highlight(
+  gg, dynamic = TRUE, persistent = TRUE, 
+  selected = attrs_selected(mode = "markers+lines", marker = list(symbol = "x"))
+)
+```
+
+<iframe src="11.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+## m-to-n linking
+
+```{r}
+demo("highlight-pipeline", package = "plotly")
+```
+
+<iframe src="11b.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+class: inverse, center
+background-image: url(../your-turn.jpeg)
+background-size: contain
+
+## Your turn
+
+(1) Modify [the last demo](https://github.com/ropensci/plotly/blob/master/demo/highlight-pipeline.R) to have persistent and dynamic selection. Try supplying your own custom color palette.
+
+(2) Read the code. Change `add_bars()` to `add_markers()`. How in the world does this work?
+
+
+---
+class: bottom, left 
+background-image: url(pipeline.svg)
+background-size: contain
+
+## The 'data pipeline'
+
+Where does the pipeline <br /> 'live'?
+
+
+---
+background-image: url(crosstalk.svg)
+background-size: contain
+
+## The general model
+
+.footnote[
+All the "updating logic" is self-contained in your browser via JavaScript, which is good!
+]
+
+---
+## Binning (i.e., transforming) the target
+
+```{r}
+demo("highlight-binned-target", package = "plotly")
+```
+
+<iframe src="11c.html" width="100%" height="480" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+## Binning (i.e., transforming) the target
+
+```{r}
+demo("highlight-binned-target", package = "plotly")
+```
+
+<iframe src="11d.html" width="100%" height="525" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+class: inverse, center, middle
+
+# You can only go so far without shiny...
+
+---
+class: bottom
+background-image: url(zikar.gif)
+background-size: contain
+
+### https://github.com/cpsievert/zikar
+
+---
+class: bottom
+background-image: url(eechidna.gif)
+background-size: contain
+
+### https://github.com/ropenscilabs/eechidna
+
+---
+class: center, middle
+background-image: url(combine-powers.gif)
+background-size: contain
+
+# ...but we can combine powers
+
+---
+class: bottom
+background-image: url(bcviz.gif)
+background-size: contain
+
+### https://github.com/cpsievert/bcviz
+
+---
+class: center, middle
+
+# I promise...
+
+We will get to shiny, but we can do *much* more *without* shiny<sup>1</sup>
+
+.footnote[
+[1]: why this is important? Ask me!
+]
+
+---
+## Animating selections
+
+```{r}
+a <- SharedData$new(Abilene, ~month)
+p <- ggplot(a, aes(month, sales, frame = year)) + 
+  geom_line() + geom_point()
+highlight(ggplotly(p), "plotly_selected")
+```
+
+<iframe src="13.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+## Avoid overplotting
+
+```{r}
+g <- SharedData$new(gapminder, ~continent)
+gg <- ggplot(g, aes(gdpPercap, lifeExp, color = continent, frame = year)) +
+  geom_point(aes(size = pop, ids = country)) +
+  geom_smooth(se = FALSE, method = "lm") 
+ggplotly(gg + scale_x_log10())
+```
+
+<iframe src="14.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+
+```{r}
+demo("tour-USArrests", package = "plotly")
+```
+
+<a href="15.html" target="_blank" >
+  <img src="usarrests.gif" width="900" height="550" />
+</a>
+
+---
+class: inverse, middle, center
+
+# Filter vs selection
+
+The `highlight()` function provides ways to handle/configure *selection* events
+
+You can also trigger *filter* events through **crosstalk** widgets.
+
+They are similar, but axes respond (i.e., relayout) to *filter* events.<sup>1</sup>
+
+.footnote[
+[1]: when using `ggplotly()`, you need to specify `dynamicTicks = TRUE`
+]
+
+---
+## Crosstalk's filtering widgets
+
+
+```{r}
+tx <- SharedData$new(txhousing)
+widgets <- bscols(widths = c(12, 12, 12),
+  filter_select("city", "Cities", tx, ~city),
+  filter_slider("sales", "Sales", tx, ~sales),
+  filter_checkbox("year", "Years", tx, ~year, inline = TRUE)
+)
+widgets
+```
+
+<iframe src="crosstalk/1/index.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+## Filtering
+
+```{r}
+bscols(
+  widths = c(4, 8), widgets, 
+  plot_ly(tx, x = ~date, y = ~median, showlegend = FALSE) %>% 
+    add_lines(color = ~city, colors = "black", connectgaps = FALSE) # bug in plotly.js?
+)
+```
+
+<iframe src="crosstalk/2/index.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+
+---
+## Talk to other crosstalk-enabled widgets
+
+```{r}
+library(leaflet)
+sd <- SharedData$new(quakes)
+p <- plot_ly(sd, x = ~depth, y = ~mag) %>% add_markers(alpha = 0.5) %>% highlight("plotly_selected")
+map <- leaflet(sd) %>% addTiles() %>% addCircles()
+bscols(p, map)
+```
+
+<iframe src="leaflet/index.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+
+---
+class: inverse, center
+background-image: url(../your-turn.jpeg)
+background-size: contain
+
+## Your Turn
+
+Add some filter widgets to the earthquakes example.
+
+**Bonus**: Try saving the result to an HTML file.
+
+**Hint**: You can save htmlwidgets to a self-contained HTML via `htmlwidgets::saveWidget()`, but this approach requires the more general `htmltools::html_print()`
+
+.footnote[
+Solution is [here](02-your-turn.R)
+]
+
+---
+class: center, middle, inverse
+
+## Expectations vs reality
+
+.pull-left[
+  <img src="thin-ice.gif" height = "500" width = "350" />
+]
+
+.pull-right[
+<br />
+<br />
+<br />
+<br />
+
+  **plotly** has advanced support for *selection* events (e.g., `persistent`, `dynamic`, `selectize`)
+
+  Other [**crosstalk**-enabled htmlwidgets](https://rstudio.github.io/crosstalk/) likely won't support these additional *selection* event features.
+  
+  However, *filter* events should generally be supported.
+]
+
+---
+## Shiny is a web application framework
+
+Web applications are generally more powerful and flexible; but also more complicated, less responsive, and difficult to share.
+
+<div align="center" >
+  <img src="server-client.svg" width="700" height="400" />
+</div>
+
+---
+## [Accessing user events](events-shiny.R) in shiny
+
+<div align="center" >
+  <img src="events-shiny.gif" width="900" height="550" />
+</div>
+
+This functionality is tied to `plotOutput()`, which doesn't support web-based graphics.
+
+---
+## [Accessing plotly events](events-plotly.R) in shiny
+
+
+<div align="center" >
+  <img src="events-plotly.gif" width="900" height="550" />
+</div>
+
+---
+class: inverse, center
+background-image: url(../your-turn.jpeg)
+background-size: contain
+
+## Your Turn
+
+Program an app to populate a bar chart reflecting the selection, sort of like this:
+
+
+<div align="center" >
+  <img src="events-plotly-linked.gif" width="600" height="550" />
+</div>
+
+
+---
+## [Targetting events](events-plotly.R)
+
+
+<div align="center" >
+  <img src="plotlyLinkedClick.gif" width="900" height="500" />
+</div>
+
+
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+class: center, middle
+
+# Thanks!
+
+Resources for more learning:
+
+https://cpsievert.github.io/plotly_book/ <br />
+https://plot.ly/r/ <br />
+https://cpsievert.github.io/talks/ <br />
+https://github.com/cpsievert/phd-thesis <br />
+https://github.com/cpsievert/pedestrians <br />
+https://github.com/cpsievert/bcviz <br />
+https://github.com/cpsievert/shiny_apps <br />
+
+Reach out to me
+
+Twitter: [@cpsievert](https://twitter.com/cpsievert) <br />
+GitHub: [@cpsievert](https://github.com/cpsievert) <br />
+Email: <cpsievert1@gmail.com> <br />
+Web: <http://cpsievert.github.io/>
+
+
+---
+class: center, middle
+background-image: url(plotly.svg)
+background-size: contain
+
+
+
+

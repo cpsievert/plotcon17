@@ -2,7 +2,7 @@
 title: "Getting (re)-acquainted with R, RStudio, data wrangling, ggplot2, and plotly"
 venue: "plotcon 17"
 type: "workshop"
-recording: "TBA"
+recording: "NA"
 output:
   xaringan::moon_reader:
     chakra: "../remark_lib/remark-latest.min.js"
@@ -41,8 +41,9 @@ PS. remember this background image -- it means I want something from you!
 
 ### About the workshop
 
-* Today is all about motivation and foundations.
-* Tomorrow will be about recent advancements: animation, linked views, & shiny.
+* I'm going to deliberately focus on things that are hard to learn from documentation alone.
+* Today is mainly about how everything fits together.
+* Tomorrow will be lots of examples: animation, linked views, & shiny.
 * I'm hoping to save a couple hours tomorrow for a Q&A session.
   * Feel free to ask me about personal projects.
   * I'll have some "advanced" exercises, in case you don't already have your own `r emo::ji("wink")`
@@ -541,7 +542,9 @@ background-image: url(../your-turn.jpeg)
 background-size: contain
 
 
-# Time for Q & A
+# Time for Q & A?
+
+We have lots to cover tomorrow...would you rather get going on that?
 
 .footnote[
 Have a question that the whole group can benefit from? Ask me on Slack!
