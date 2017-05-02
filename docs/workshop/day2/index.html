@@ -219,6 +219,22 @@ p &lt;- ggplot(sd, aes(month, median, group = year)) + geom_line() +
 &lt;iframe src="09.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
 
 ---
+## Or in a scatterplot matrix
+
+
+```r
+txhousing %&gt;% 
+  select(median, volume, listings, inventory) %&gt;% 
+  GGally::ggpairs() %&gt;% ggplotly() %&gt;% highlight("plotly_selected")
+```
+
+&lt;a href="09a.html"&gt;
+  &lt;div align="center"&gt;
+    &lt;img src="scatterplot-matrix.gif" width="750" height="430" /&gt;
+  &lt;/div&gt;
+&lt;/a&gt;
+
+---
 ## Highlight on hover
 
 
@@ -586,9 +602,15 @@ Web: &lt;http://cpsievert.github.io/&gt;
 
 
 ---
-class: center, middle
+class: center
 background-image: url(plotly.svg)
 background-size: contain
+
+# Ask me anything!!
+
+.footnote[
+Got nothing to do? Check out the new api interface -- `help(api)`
+]
     </textarea>
 <script src="../remark_lib/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({

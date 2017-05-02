@@ -204,6 +204,21 @@ p <- ggplot(sd, aes(month, median, group = year)) + geom_line() +
 <iframe src="09.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
 
 ---
+## Or in a scatterplot matrix
+
+```{r}
+txhousing %>% 
+  select(median, volume, listings, inventory) %>% 
+  GGally::ggpairs() %>% ggplotly() %>% highlight("plotly_selected")
+```
+
+<a href="09a.html">
+  <div align="center">
+    <img src="scatterplot-matrix.gif" width="750" height="430" />
+  </div>
+</a>
+
+---
 ## Highlight on hover
 
 ```{r}
@@ -558,10 +573,12 @@ Web: <http://cpsievert.github.io/>
 
 
 ---
-class: center, middle
+class: center
 background-image: url(plotly.svg)
 background-size: contain
 
+# Ask me anything!!
 
-
-
+.footnote[
+Got nothing to do? Check out the new api interface -- `help(api)`
+]

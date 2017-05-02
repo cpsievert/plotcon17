@@ -3,7 +3,6 @@ library(crosstalk)
 library(plotly)
 
 sd <- SharedData$new(quakes)
-
 stations <- filter_slider("station", "Number of Stations", sd, ~stations)
 
 p <- plot_ly(sd, x = ~depth, y = ~mag) %>% 
@@ -15,8 +14,8 @@ map <- leaflet(sd) %>%
   addCircles()
 
 tags <- bscols(
-  widths = c(12, 6, 6), 
-  stations, p, map
+  widths = c(6, 6, 3), 
+  p, map, stations
 )
 
 # res contains path to a temporary file

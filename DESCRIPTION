@@ -15,7 +15,8 @@ Imports:
   knitr,
   rmarkdown,
   gapminder,
-  shiny
+  shiny,
+  GGally
 RoxygenNote: 6.0.1
 Remotes:
   rstudio/leaflet#346,

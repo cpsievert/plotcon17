@@ -13,23 +13,33 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
-date: "April 12th, 2017 <br /> <br /> Slides: https://cpsievert.github.io/plotcon17/talk  <br /> <br /> Slides released under <a href='https://github.com/cpsievert/talks/blob/gh-pages/LICENSE'>Creative Commons</a>"
+      navigation:
+        scroll: false
+date: "May 2nd, 2017 <br /> <br /> Slides: https://bit.ly/plotcon17-talk <br /> <br /> Twitter: <a href='https://twitter.com/cpsievert'>@cpsievert</a> <br />
+GitHub: <a href='https://github.com/cpsievert'>@cpsievert</a> <br />
+Email: <cpsievert1@gmail.com> <br />
+Web: <http://cpsievert.github.io/>"
+
 author: "Carson Sievert"
 ---
+class: inverse, middle
 
-```{r setup, echo = FALSE}
-knitr::opts_chunk$set(
-  message = FALSE,
-  fig.width = 10,
-  fig.height = 4,
-  comment = "#>",
-  collapse = TRUE
-)
-```
+## Data Science Workflow
+
+<div align="center">
+  <img src="workflow.svg" width="1000" height="350" />
+</div>
+
+???
+
+I love this diagram from the R for Data Science book.
+
+Concisely captures the main components.
+
+---
+class: inverse, middle
 
 ## Expository vis
-
-* plotly.js is awesome for expository/scientific vis!
 
 <p></p>
 
@@ -37,7 +47,16 @@ knitr::opts_chunk$set(
   <img src="workflow1.svg" width="1000" height="300" />
 </div>
 
+#### plotly.js is awesome for expository/scientific vis!
+
+???
+
+The web has become the preferred medium for communicating results.
+
+Once you know what you want to show, plotly.js is a great choice!!
+
 ---
+class: inverse, middle
 
 ## Exploratory vis
 
@@ -47,79 +66,290 @@ knitr::opts_chunk$set(
   <img src="workflow2.svg" width="1000" height="325" />
 </div>
 
-* JavaScript lacks tools for iteration (necessary for exploration/discovery!)
-  * Data scientists juggle many technolgies (R, Python, JavaScript)
+* Data scientists have to juggle many technolgies (R, Python, JavaScript)
+
+???
+
+JavaScript lacks tools for iteration (necessary for exploration/discovery!)
 
 ---
+class: inverse, center
 
+## It is all too easy for statistical thinking to be **swamped by programming tasks.**
+
+<div align="center">
+  <img src="swamp.gif" width="500" height="400" />
+</div>
+
+Quote from Brian D. Ripley
+
+
+???
+
+So, this is me, in my 2nd year of grad school, deciding to learn D3 & JavaScript.
+
+It took me 6+ months to implement a single interactive visualization.
+
+And let me tell you, you guys, no joke, believe me, I arose from the swamp, and decide I alone will...
+
+
+---
+class: inverse, center, middle
+
+# `r emo::ji("point_up")` `r emo::ji("tangerine")` 
+
+<div align="center">
+  <img src="drain-the-swamp.gif" width="600" height="400" />
+</div>
+
+
+---
+class: middle
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+
+# My mission
+
+A single (R) interface that:
+
+1. Doesn't require knowledge of web technologies.
+2. Works seamlessly with other "tidy" tools in R.
+3. Easy<sup>1</sup> to declare interactive *techniques that support common data analysis tasks*<sup>2</sup>.
+
+.footnote[ 
+[1]: 80% should be easy (i.e., don't require extra knowledge), but the remaining 20% should be possible. <br />
+[2]: Analysts usually have different needs from the terminal audience.
+]
+  
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
 ## Interactivity augments data exploration!
 
-* Identify structure that otherwise goes missing (Tukey 1972).
-* Interactive techniques foster data analysis tasks (Cook et al 1996).
+* Identify structure that otherwise goes missing ([Tukey 1972]()).
+* Interactive techniques foster data analysis tasks ([Cook et al 1996]()).
     * Finding Gestalt, posing queries, and making comparisons.
-* Generate insights faster (Hofmann & Unwin 1999).
-* Better understand/diagnose models (Wickham, Cook, & Hofmann 2015).
+* Better understand/diagnose models ([Wickham, Cook, & Hofmann 2015]()).
+
+???
+
+* Let's not forget -- statisticians have been thinking about the problem for 50 years!
+* Easy to get lost in a sea of techniques -- easier if you motivate via data analysis tasks.
+* Not everyone has a need to diagnose models, but everyone has a need to get stuff done
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+## Interactivity augments data exploration!
+
+* Identify structure that otherwise goes missing ([Tukey 1972]()).
+* Interactive techniques foster data analysis tasks ([Cook et al 1996]()).
+    * Finding Gestalt, posing queries, and making comparisons.
+* Better understand/diagnose models ([Wickham, Cook, & Hofmann 2015]()).
+* Generate insights faster ([Hofmann & Unwin 1999]()).
 
 <div align="center">
   <img src="look.gif" width="800" height="375" />
 </div>
 
----
+???
 
-## Disconnect between designers and analysts
-
-sdsdfdsf
+This is especially true as data becomes more accessible...less formal mathematical models testing exact questions, more flexible tools for posing graphical queries about data
 
 ---
-class: center, middle, inverse
+background-image: url(workflow2.svg)
+background-size: 250px
+background-position: 90% 8%
+class: inverse, center, middle
 
-# My mission
+### No matter how complex and polished the individual operations are, it is often 
 
-A single interface that makes 80% of *interactive techniques that support analysis tasks* seamless, quick, and easy (w/o knowledge of web technology).<sup>1</sup>
+# the quality of the glue that most directly determines the power of the system.
 
-.footnote[ <sup>1</sup> and the remaining 20% should be possible ]
+.footnote[
+Quote from [Hal Abelson]() -- part of the [tidyverse manifesto](https://cran.r-project.org/package=tidyverse)
+]
 
+???
 
---- 
-
-## An example 
-
-* albersusa + geom_sf()?
+Generating faster insights requires good glue. This comes in two parts:
+  * Works seamlessly with other programming interfaces (iteration time!)
+  * Works seamlessly with other graphical interfaces (i.e., can link components from independent systems).
 
 ---
+class: center, middle
+
+<!-- Find the data is beatiful post! -->
+
+<a href="https://twitter.com/galka_max/status/856167515701084166" target="_blank" >
+  <img src="../workshop/day1/europe.png" height="700" width="600"/>
+</a>
+
+---
+
+```r
+library(tidyverse)
+library(plotly)
+
+d <- read_csv('GEOSTAT_grid_POP_1K_2011_V2_0_1.csv') %>%
+  rbind(read_csv('JRC-GHSL_AIT-grid-POP_1K_2011.csv') %>%
+          mutate(TOT_P_CON_DT = '')) %>%
+  mutate(
+    lat = as.numeric(gsub('.*N([0-9]+)[EW].*', '\\1', GRD_ID))/100,
+    lng = as.numeric(gsub('.*[EW]([0-9]+)', '\\1', GRD_ID)) * ifelse(gsub('.*([EW]).*', '\\1', GRD_ID) == 'W', -1, 1) / 100
+  ) %>%
+  filter(lng > 25, lng < 60) %>%
+  group_by(lat = round(lat, 1), lng = round(lng, 1)) %>%
+  summarize(value = sum(TOT_P, na.rm = T))  %>%
+  ungroup() %>%
+  tidyr::complete(lat, lng)
+
+*# make each latitude "highlight-able"
+*sd <- crosstalk::SharedData$new(d, ~lat)
+
+p <- ggplot(sd, aes(lng, lat + 5*(value / max(value, na.rm = T)))) +
+  geom_line(
+    aes(group = lat, text = paste("Population:", value)),
+    size = 0.4, alpha = 0.8, color = '#5A3E37', na.rm = T
+  ) +
+  coord_equal(0.9) + 
+  ggthemes::theme_map()
+
+*ggplotly(p) %>% highlight(persistent = TRUE)
+```
+
+---
+
+<iframe src="../workshop/day1/europe.html" width="100%" height="750" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
 
 ## Linking multiple views
 
-<!-- The election example? -->
-sadkdsff
+<a href="election.mp4" >
+  <div align="center" >
+    <img src="election.png" width="1000" height="500" />
+  </div> 
+</a>
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+
+## Customize/transform the selection
+
+```r
+highlight(
+  gg, selected = attrs_selected(mode = "markers+lines", marker = list(symbol="x"))
+)
+```
+
+<iframe src="custom.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+
+## Linking animated views
+
+<a href="../workshop/day2/15.html" >
+  <div align="center" >
+    <img src="../workshop/day2/usarrests.gif" width="800" height="500" />
+  </div> 
+</a>
+
+---
+background-image: url(plotly.svg)
+background-size: 100px
+background-position: 90% 8%
+
+## Link with other widgets
+
+<iframe src="leaflet2/index.html" width="100%" height="600" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
 
 ---
 
-## Other attempts
+```r
+library(leaflet)
+library(crosstalk)
+library(plotly)
 
-* Custom SVG graphics device
-  * __gridSVG__ / __SVGAnnotation__ / __ggiraph__
-  
-* Declarative (JSON) specification
-  * ggvis (vega)
-  * plotly (plotly.js)
-  * rbokeh (bokeh)
-  * animint (custom)
-  
-<!-- 
-(1) can guarantee a replicated look, but 
-have to build interactivity from the ground-up
--->
+sd <- SharedData$new(quakes)
+stations <- filter_slider("station", "Number of Stations", sd, ~stations)
+
+p <- plot_ly(sd, x = ~depth, y = ~mag) %>% 
+  add_markers(alpha = 0.5) %>% 
+  highlight("plotly_selected", dynamic = TRUE)
+
+map <- leaflet(sd) %>% 
+  addTiles() %>% 
+  addCircles()
+
+bscols(p, map, stations)
+```
+
 
 ---
 
-## R 
+```r
+library(leaflet)
+library(crosstalk)
+library(plotly)
 
-* Workflow
-  * Exploratory versus expository
+*# Input data for every view!
+*sd <- SharedData$new(quakes)
+stations <- filter_slider("station", "Number of Stations", sd, ~stations)
 
-## Why linked views?
+p <- plot_ly(sd, x = ~depth, y = ~mag) %>% 
+  add_markers(alpha = 0.5) %>% 
+  highlight("plotly_selected", dynamic = TRUE)
 
-* Scientific visualization versus data visualization
-  * e.g., 3D objects versus a tour
-  
+map <- leaflet(sd) %>% 
+  addTiles() %>% 
+  addCircles()
+
+bscols(p, map, stations)
+```
+
+
+### TAKE HOME MESSAGE: Build upon uniform data structures!
+
+---
+class: inverse, middle, center
+background-image: url(headshots.png)
+background-size: contain
+
+## Standing on the shoulders of giants
+
+
+---
+background-image: url(plotly.svg)
+background-size: contain
+
+## Thank you! Questions?
+
+.footnote[
+More resources:
+
+https://bit.ly/plotcon17workshop <br />
+https://cpsievert.github.io/plotly_book
+]
+
+---
+class: bottom
+background-image: url(plotly.svg)
+background-size: contain
+
+.footnote[
+Slides released under <a href='https://github.com/cpsievert/talks/blob/gh-pages/LICENSE'>Creative Commons</a>
+]
