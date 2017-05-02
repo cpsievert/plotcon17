@@ -242,11 +242,12 @@ background-position: 90% 8%
 
 ```r
 highlight(
-  gg, selected = attrs_selected(mode = "markers+lines", marker = list(symbol="x"))
+  gg, persistent = TRUE, dynamic = TRUE, selectize = TRUE,
+  selected = attrs_selected(mode = "markers+lines", marker = list(symbol="x"))
 )
 ```
 
-&lt;iframe src="custom.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+&lt;iframe src="custom.html" width="100%" height="390" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
 
 ---
 background-image: url(plotly.svg)
