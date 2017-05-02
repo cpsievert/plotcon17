@@ -143,9 +143,9 @@ HTMLWidgets.widget({
     }
     
     // remove "sendDataToCloud", unless user has specified they want it
-    x.config = x.config || {};
-    if (!x.config.cloud) {
-      x.config.modeBarButtonsToRemove = x.config.modeBarButtonsToRemove || [];
+    var config = x.config || {};
+    if (!config.cloud) {
+      x.config.modeBarButtonsToRemove = config.modeBarButtonsToRemove || [];
       x.config.modeBarButtonsToRemove.push("sendDataToCloud");
     }
     
@@ -275,25 +275,29 @@ HTMLWidgets.widget({
           continue;
         }
         
-        // set defaults for this keySet
-        // note that we don't track the nested property (yet) since we always 
-        // emit the union -- http://cpsievert.github.io/talks/20161212b/#21
-        keysBySet[trace.set] = keysBySet[trace.set] || {
-          value: [],
-          _isSimpleKey: trace._isSimpleKey
-        };
-        
         // selecting a point of a "simple" trace means: select the 
         // entire key attached to this trace, which is useful for,
         // say clicking on a fitted line to select corresponding observations 
-        var key = trace._isSimpleKey ? trace.key : trace.key[points[i].pointNumber];
-        // http://stackoverflow.com/questions/10865025/merge-flatten-an-array-of-arrays-in-javascript
-        var keyFlat = trace._isNestedKey ? [].concat.apply([], key) : key;
+        if (trace._isSimpleKey) {
+          keysBySet[trace.set] = {value: trace.key, _isSimpleKey: true};
+          // TODO: could this be made more efficient by looping at the trace level first?
+          continue;
+        }
         
-        // TODO: better to only add new values?
-        keysBySet[trace.set].value = keysBySet[trace.set].value.concat(keyFlat);
+        // set defaults for this key set
+        keysBySet[trace.set] = keysBySet[trace.set] || 
+          {value: [], _isSimpleKey: false};
+        
+        // the key for this point (could be "nested" -- i.e. a 2D array)
+        var key = trace.key[points[i].pointNumber];
+        if (trace._isNestedKey) {
+          // TODO: is this faster than pushing?
+          keysBySet[trace.set].value = keysBySet[trace.set].value.concat(key);
+        } else {
+          keysBySet[trace.set].value.push(key);
+        }
+        
       }
-      
       return keysBySet;
     }
     
@@ -421,7 +425,7 @@ HTMLWidgets.widget({
             }
             crosstalk.var("plotlySelectionHistory").set(selectionHistory);
             
-
+            // e.value is either null, or an array of newly selected values
             traceManager.updateSelection(set, e.value);
             // https://github.com/selectize/selectize.js/blob/master/docs/api.md#methods_items
             if (x.selectize) {
