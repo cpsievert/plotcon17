@@ -41,17 +41,17 @@ PS. remember this background image -- it means I want something from you!
 
 ### About the workshop
 
-* I'm going to deliberately focus on things that are hard to learn from documentation alone.
-* Today is mainly about how everything fits together (+ lots of mapping examples).
+* Focus on things that are hard to learn from documentation alone.
+* Today is mainly about how everything fits together (& lots of mapping examples).
 * Tomorrow will be lots of examples: animation, linked views, & shiny.
-* I'm hoping to save a couple hours tomorrow for a Q&A session.
+* I'm hoping to save time today/tomorrow for a Q&A session.
+  * Feel free to stop me at any time.
   * Feel free to ask me about personal projects during down time.
   
 ---
 ## About the attendees
 
 <iframe src="attendees.html" width="100%" height="550" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
-
 
 ---
 
@@ -91,7 +91,7 @@ knitr::opts_chunk$set(
 ---
 ## Universal truths
 
-Use the `str()` function to inspect any object
+Use the `str()` function to inspect any object (`View()` in RStudio is a nice interactive alternative).
 
 ```{r, eval = TRUE}
 str(mtcars)
@@ -287,7 +287,11 @@ class: center, middle
 
 See `demo("highlight-epl", package = "plotly")`
 
-<iframe src="epl.html" width="100%" height="650" seamless="seamless" frameBorder="0"> </iframe>
+<a href="epl.html">
+  <div align="center">
+    <img src="epl.gif" width="800" height="500" />
+  </div>
+</a>
 
 ---
 class: inverse, center, middle
@@ -298,7 +302,7 @@ I'd say ~80% of the ggplot2 API is correctly translated by `ggplotly()`.
 
 I'm aiming for ~99% before the end of the year.
 
-Regardless, knowing how it all works helps to workaround limitations
+Regardless, knowing how it all works helps to workaround limitations & specify additional features not supported by the ggplot2 API
 
 ---
 class: inverse, center
@@ -581,7 +585,7 @@ plot_ly() %>%
 ---
 ## ggmap objects are bitmap images!
 
-```{r, eval = TRUE}
+```{r}
 library(ggmap)
 basemap <- get_map(maptype = "satellite", zoom = 8)
 p <- ggmap(basemap) +
@@ -590,13 +594,12 @@ p <- ggmap(basemap) +
   ggthemes::theme_map()
 ```
 
-```{r, echo = FALSE, eval = TRUE}
-p
-```
+<div align="center">
+  <img src="ggmap.png" height="386" width="728" />
+</div>
 
 ---
 ## Add zoom/pan/tooltips via `ggplotly()`
-
 
 ```{r}
 ggplotly(p)
@@ -661,14 +664,12 @@ background-size: contain
 
 ## Your turn
 
-Peruse some of the examples on <https://plot.ly/r/maps/>
+(1) Peruse some of the examples on <https://plot.ly/r/maps/>. Which approach do you like best (`ggplotly()`, `plot_geo()`, or `plot_mapbox()`)? Let me know via Slack. Can you point out some advantages/disadvantages to each approach?
 
-Which approach do you like best (`ggplotly()`, `plot_geo()`, or `plot_mapbox()`)?
-
-Can you list some of advantages/disadvantages to each approach?
+(2) See the last example on <https://plot.ly/r/lines-on-maps/> -- how does the plot know to render in 3D? Can you make a 2D version?
 
 .footnote[
-Not interested in maps? Tell me what you'd like to see!
+Not interested in maps? Peak through [tomorrow's slides](../day2/index.html). Tell me if you want to see something else!
 
 Have a personal project (related to plotly) that you need help with? Ask me!
 ]
