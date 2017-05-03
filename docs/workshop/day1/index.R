@@ -94,7 +94,7 @@ plot_ly() %>%
   )
 
 ## ------------------------------------------------------------------------
-# In recent versions of RStudio -- View(gg$x)
+# In recent versions of RStudio -- gg %>% plotly_build() %>% View()
 plotly_json(gg)
 
 ## ------------------------------------------------------------------------
@@ -114,4 +114,46 @@ add_polygons(gg, x = d$x, y = d$y, color = I("red"), inherit = FALSE)
 ## ------------------------------------------------------------------------
 # In recent versions of RStudio -- View(plotly:::Schema)
 schema()
+
+## ---- eval = TRUE--------------------------------------------------------
+m <- matrix(hcl(0, 80, seq(50, 80, 10)), nrow = 4, ncol = 5)
+(r <- as.raster(m))
+plot(r)
+
+## ---- echo = FALSE-------------------------------------------------------
+plot_ly() %>%
+  layout(images = list(
+    source = raster2uri(r),
+    xref = "x", 
+    yref = "y", 
+    x = 0, y = 0, 
+    sizex = 1, sizey = 1, sizing = "stretch",
+    xanchor = "left", yanchor = "bottom"
+  ))
+
+## ------------------------------------------------------------------------
+library(ggmap)
+basemap <- get_map(maptype = "satellite", zoom = 8)
+p <- ggmap(basemap) +
+  geom_polygon(aes(x = lon, y = lat, group = plotOrder),
+    data = zips, colour = "black", fill = NA) +
+  ggthemes::theme_map()
+
+## ------------------------------------------------------------------------
+ggplotly(p)
+
+## ------------------------------------------------------------------------
+library(maps)
+library(sf)
+world1 <- st_as_sf(map('world', plot = FALSE, fill = TRUE))
+ggplot() + geom_sf(data = world1)
+
+## ------------------------------------------------------------------------
+# http://spatialreference.org/ref/sr-org/7/proj4/
+canada <- subset(world1, ID == "Canada")
+canada2 <- st_transform(canada,"+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +units=m +no_defs")
+ggplot() + geom_sf(data = canada2)
+
+## ------------------------------------------------------------------------
+ggplotly()
 
