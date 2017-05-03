@@ -544,6 +544,10 @@ Program an app to populate a bar chart reflecting the selection, sort of like th
   <img src="plotlyLinkedClick.gif" width="900" height="500" />
 </div>
 
+---
+
+<!-- TODO: onRender()? -->
+
 
 
 ---
@@ -580,5 +584,7 @@ background-size: contain
 # Ask me anything!!
 
 .footnote[
-Got nothing to do? Check out the new api interface -- `help(api)`
+Want something to do? Some ideas:
+    * Read about the new api interface -- `help(api)`.
+    * Explore the demos -- `demo(package = "plotly")`
 ]

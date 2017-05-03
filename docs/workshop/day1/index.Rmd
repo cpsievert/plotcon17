@@ -42,11 +42,10 @@ PS. remember this background image -- it means I want something from you!
 ### About the workshop
 
 * I'm going to deliberately focus on things that are hard to learn from documentation alone.
-* Today is mainly about how everything fits together.
+* Today is mainly about how everything fits together (+ lots of mapping examples).
 * Tomorrow will be lots of examples: animation, linked views, & shiny.
 * I'm hoping to save a couple hours tomorrow for a Q&A session.
-  * Feel free to ask me about personal projects.
-  * I'll have some "advanced" exercises, in case you don't already have your own `r emo::ji("wink")`
+  * Feel free to ask me about personal projects during down time.
   
 ---
 ## About the attendees
@@ -543,15 +542,133 @@ Solution is [here](02-your-turn.R)
 ]
 
 ---
-class: inverse, center, middle
+## Raster objects
+
+* Raster objects are basically a matrix of color codes. These objects can be used to represent bitmap images. 
+
+```{r, eval = TRUE}
+m <- matrix(hcl(0, 80, seq(50, 80, 10)), nrow = 4, ncol = 5)
+(r <- as.raster(m))
+plot(r)
+```
+
+---
+## Embedding raster objects in plotly
+
+```r
+  plot_ly() %>%
+  layout(images = list(
+*   source = raster2uri(r), # converts a raster object to a data URI.
+    xref = "x", yref = "y", x = 0, y = 0, sizex = 1, sizey = 1,
+    sizing = "stretch", xanchor = "left", yanchor = "bottom"
+  ))
+```
+
+```{r, echo = FALSE}
+plot_ly() %>%
+  layout(images = list(
+    source = raster2uri(r),
+    xref = "x", 
+    yref = "y", 
+    x = 0, y = 0, 
+    sizex = 1, sizey = 1, sizing = "stretch",
+    xanchor = "left", yanchor = "bottom"
+  ))
+```
+
+<iframe src="raster.html" width="100%" height="400" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+## ggmap objects are bitmap images!
+
+```{r, eval = TRUE}
+library(ggmap)
+basemap <- get_map(maptype = "satellite", zoom = 8)
+p <- ggmap(basemap) +
+  geom_polygon(aes(x = lon, y = lat, group = plotOrder),
+    data = zips, colour = "black", fill = NA) +
+  ggthemes::theme_map()
+```
+
+```{r, echo = FALSE, eval = TRUE}
+p
+```
+
+---
+## Add zoom/pan/tooltips via `ggplotly()`
+
+
+```{r}
+ggplotly(p)
+```
+
+<iframe src="ggmap.html" width="100%" height="500" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+## A crossroads in ggplot2 mapping 
+
+* Going forward, `geom_sf()` will be the preferred way to map in **ggplot2**, but it is still under development.
+* It will support _any map projection_, thanks to the magic of **sf**.
+
+```{r}
+library(maps)
+library(sf)
+world1 <- st_as_sf(map('world', plot = FALSE, fill = TRUE))
+ggplot() + geom_sf(data = world1)
+```
+
+<div align="center">
+  <img src="world1.png" height="314" width="728" />
+</div>
+
+
+---
+## Finding map projections
+
+* <http://www.spatialreference.org/ref/> is invaluable for finding map projections.
+
+<div align="center">
+  <img src="reference.png" height="450" width="800" />
+</div>
+
+---
+## Mollweide projection of Canada
+
+```{r}
+# http://spatialreference.org/ref/sr-org/7/proj4/
+canada <- subset(world1, ID == "Canada")
+canada2 <- st_transform(canada,"+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +units=m +no_defs")
+ggplot() + geom_sf(data = canada2)
+```
+
+<div align="center">
+  <img src="canada.png" height="386" width="728" />
+</div>
+
+---
+## Now with `ggplotly()`
+
+```{r}
+ggplotly()
+```
+
+<iframe src="canada.html" width="100%" height="500" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+class: inverse, center
 background-image: url(../your-turn.jpeg)
 background-size: contain
 
+## Your turn
 
-# Time for Q & A?
+Peruse some of the examples on <https://plot.ly/r/maps/>
 
-We have lots to cover tomorrow...would you rather get going on that?
+Which approach do you like best (`ggplotly()`, `plot_geo()`, or `plot_mapbox()`)?
+
+Can you list some of advantages/disadvantages to each approach?
 
 .footnote[
-Have a question that the whole group can benefit from? Ask me on Slack!
+Not interested in maps? Tell me what you'd like to see!
+
+Have a personal project (related to plotly) that you need help with? Ask me!
 ]
