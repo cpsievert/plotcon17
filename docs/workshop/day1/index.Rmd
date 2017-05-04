@@ -42,16 +42,25 @@ PS. remember this background image -- it means I want something from you!
 ### About the workshop
 
 * Focus on things that are hard to learn from documentation alone.
-* Today is mainly about how everything fits together (& lots of mapping examples).
-* Tomorrow will be lots of examples: animation, linked views, & shiny.
+* Today is mainly about core ideas (& lots of mapping examples).
+* Tomorrow is a bit more advanced: animation, linked views, & shiny.
 * I'm hoping to save time today/tomorrow for a Q&A session.
   * Feel free to stop me at any time.
   * Feel free to ask me about personal projects during down time.
+  
+.footnote[
+Did anyone attend my talk on Tuesday?
+]
   
 ---
 ## About the attendees
 
 <iframe src="attendees.html" width="100%" height="550" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+---
+## About the attendees, another look
+
+<iframe src="attendees2.html" width="100%" height="550" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
 
 ---
 
@@ -296,7 +305,7 @@ See `demo("highlight-epl", package = "plotly")`
 ---
 class: inverse, center, middle
 
-# Dislaimer
+# Disclaimer
 
 I'd say ~80% of the ggplot2 API is correctly translated by `ggplotly()`.
 

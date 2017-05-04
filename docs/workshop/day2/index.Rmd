@@ -136,7 +136,7 @@ animation_slider(
 <iframe src="07.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
 
 ---
-class: center, middle
+class: center, bottom
 background-image: url(hans-rosling.jpg)
 background-size: contain
 
@@ -266,7 +266,7 @@ highlight(
 demo("highlight-pipeline", package = "plotly")
 ```
 
-<iframe src="11b.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+<iframe src="11b.html" width="100%" height="500" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
 
 ---
 class: inverse, center
@@ -435,7 +435,7 @@ widgets
 bscols(
   widths = c(4, 8), widgets, 
   plot_ly(tx, x = ~date, y = ~median, showlegend = FALSE) %>% 
-    add_lines(color = ~city, colors = "black", connectgaps = FALSE) # bug in plotly.js?
+    add_lines(color = ~city, colors = "black")
 )
 ```
 
@@ -501,8 +501,10 @@ class: center, middle, inverse
 Web applications are generally more powerful and flexible; but also more complicated, less responsive, and difficult to share.
 
 <div align="center" >
-  <img src="server-client.svg" width="700" height="400" />
+  <img src="server-client.svg" width="550" height="350" />
 </div>
+
+**Remember**: examples so far can saved as _self-contained_ HTML via `htmlwidgets::saveWidget()` and/or `htmltools::html_print()` 
 
 ---
 ## [Accessing user events](events-shiny.R) in shiny
@@ -528,12 +530,17 @@ background-size: contain
 
 ## Your Turn
 
-Program an app to populate a bar chart reflecting the selection, sort of like this:
-
+Program an app to populate a bar chart reflecting the selection, sort of like this (using `cars` data):
 
 <div align="center" >
-  <img src="events-plotly-linked.gif" width="600" height="550" />
+  <img src="events-plotly-linked.gif" width="600" height="500" />
 </div>
+
+.footnote[
+[Full solution](https://github.com/ropensci/plotly/blob/master/inst/examples/plotlyLinkedBrush/app.R)
+
+[Partial solution, <br /> without shiny](03-your-turn.R)
+]
 
 
 ---
@@ -543,12 +550,6 @@ Program an app to populate a bar chart reflecting the selection, sort of like th
 <div align="center" >
   <img src="plotlyLinkedClick.gif" width="900" height="500" />
 </div>
-
----
-
-<!-- TODO: onRender()? -->
-
-
 
 ---
 background-image: url(plotly.svg)
@@ -577,7 +578,6 @@ Web: <http://cpsievert.github.io/>
 
 
 ---
-class: center
 background-image: url(plotly.svg)
 background-size: contain
 
@@ -585,6 +585,9 @@ background-size: contain
 
 .footnote[
 Want something to do? Some ideas:
-    * Read about the new api interface -- `help(api)`.
-    * Explore the demos -- `demo(package = "plotly")`
+
+1. Read about the new api interface -- `help(api)`. <br />
+2. Explore the demos -- `demo(package = "plotly")` <br />
+3. Read about [JavaScript customization](https://cpsievert.github.io/plotly_book/custom-behavior-via-javascript.html)
+
 ]
