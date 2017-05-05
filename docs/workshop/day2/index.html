@@ -80,7 +80,9 @@ add_lines(p)
 &lt;iframe src="03.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
 
 ---
-class: inverse
+class: inverse, center
+background-image: url(../your-turn.jpeg)
+background-size: contain
 
 ## Your Turn
 
@@ -182,7 +184,7 @@ Read through [this thread](https://github.com/ropensci/plotly/issues/957). Can y
 .footnote[
 PS. hopefully we will have more official solution someday.
 
-Solution is [here](01-yout-turn.R)
+Solution is [here](01-your-turn.R)
 ]
 
 ---
@@ -242,7 +244,7 @@ txhousing %&gt;%
 highlight(gg, "plotly_hover")
 ```
 
-&lt;iframe src="09b.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+&lt;iframe src="09b.html" width="100%" height="500" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
 
 ---
 ## Set default values
@@ -252,7 +254,7 @@ highlight(gg, "plotly_hover")
 highlight(gg, defaultValues = "2006")
 ```
 
-&lt;iframe src="09c.html" width="100%" height="420" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
+&lt;iframe src="09c.html" width="100%" height="500" scrolling="no" seamless="seamless" frameBorder="0"&gt; &lt;/iframe&gt;
 
 ---
 ## Making comparisons with dynamic brush
@@ -299,6 +301,8 @@ background-size: contain
 (1) Modify [the last demo](https://github.com/ropensci/plotly/blob/master/demo/highlight-pipeline.R) to have persistent and dynamic selection. Try supplying your own custom color palette.
 
 (2) Read the code. Change `add_bars()` to `add_markers()`. How in the world does this work?
+
+(3) Can you get this working via `add_histogram()`? What's the difference between using `add_bars()` and `add_histogram()`?
 
 
 ---
@@ -573,7 +577,7 @@ Program an app to populate a bar chart reflecting the selection, sort of like th
 
 
 ---
-## [Targetting events](events-plotly.R)
+## [Targeting events](events-plotly.R)
 
 
 &lt;div align="center" &gt;
