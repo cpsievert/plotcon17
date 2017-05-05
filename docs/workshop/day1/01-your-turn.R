@@ -1,9 +1,9 @@
 library(plotly)
 library(albersusa)
 
-usa_sf <- usa_sf("laea")
+usa <- usa_sf("laea")
 
-p <- ggplot(usa_sf) + 
+p <- ggplot(usa) + 
   geom_sf(aes(fill = pop_2010, text = name)) 
 # you can ignore the warning about text...
 ggplotly(p)
@@ -12,7 +12,7 @@ ggplotly(p)
 # Use SharedData to assign an "interaction unit"
 # By default, each row is the "interaction unit" (in this case, state)
 library(crosstalk)
-usa_sd <- SharedData$new(usa_sf)
+usa_sd <- SharedData$new(usa)
 
 # same as before
 p <- ggplot(usa_sd) + 

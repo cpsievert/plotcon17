@@ -20,7 +20,7 @@ map <- ggplot() +
 map + 
   geom_text(
     data = filter(uscenter, name == "Wyoming"), 
-    aes(x, y, label = name), color = "white"
+    aes(x, y, label = name), color = "white", size = 2
   )
 ggplotly()
 

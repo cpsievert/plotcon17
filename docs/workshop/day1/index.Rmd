@@ -23,9 +23,9 @@ background-size: contain
 
 ## Your Turn
 
-Share (with your neighbor) 3 things you're hoping to get from this workshop
+(1) Do you have the required software (i.e., could you run `devtools::install_github('cpsievert/plotcon17')` without error)?
 
-Message me your answers on [Slack](https://plotconrworkshop.slack.com) (I'll keep 'em confidential)
+(2) Share (with your neighbor) 3 things you're hoping to get from this workshop (share them with me, via [Slack](https://plotconrworkshop.slack.com) if you like!)
 
 .footnote[
 PS. remember this background image -- it means I want something from you!
@@ -55,12 +55,16 @@ Did anyone attend my talk on Tuesday?
 ---
 ## About the attendees
 
-<iframe src="attendees.html" width="100%" height="550" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+<iframe src="attendees.html" width="100%" height="450" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+<https://plot.ly/ggplot2/geom_density/>
 
 ---
 ## About the attendees, another look
 
-<iframe src="attendees2.html" width="100%" height="550" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+<iframe src="attendees2.html" width="100%" height="450" scrolling="no" seamless="seamless" frameBorder="0"> </iframe>
+
+<https://plot.ly/r/parallel-coordinates-plot/>
 
 ---
 
